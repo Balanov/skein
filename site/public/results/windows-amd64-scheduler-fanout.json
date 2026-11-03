@@ -1,0 +1,1926 @@
+{
+  "schema": 2,
+  "measured_at": "2026-11-03T00:49:59.178357+00:00",
+  "shape": "fanout",
+  "scope": "Equivalent no-op DAGs; scheduler/control-plane only. No models, providers, network calls, or workload processes. Candidate process startup and LangGraph compilation are outside measured samples; Skein constructs its manifest once per batch and validates it on every sample.",
+  "method": "3 batches per candidate; candidate order rotates between batches. Each batch has 2 warmups followed by 5 measured runs. Samples from batches are pooled. No tracemalloc or other memory profiler runs inside the timed region. The raw Go control averages 10 graph executions per sample to stay above the Windows timer floor; other candidates execute one graph per sample. p95 uses nearest rank.",
+  "warning": "Local observations, not universal rankings or agent-quality benchmarks. Raw Go goroutines are an unstructured lower-bound control without graph validation, leases, reports, audit events, or stop fencing. LangGraph has a broader state/graph feature set. Different no-op DAG shapes must not be compared as if they were real model workloads.",
+  "machine": {
+    "platform": "Windows-11-10.0.28020-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD",
+    "logical_cpus": 32,
+    "python": "3.12.16"
+  },
+  "results": [
+    {
+      "shape": "fanout",
+      "tasks": 100,
+      "command": [
+        "./bin/skein-bench.exe",
+        "--candidate",
+        "go",
+        "--shape",
+        "fanout",
+        "--tasks",
+        "100",
+        "--runs",
+        "5",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "go-goroutines",
+        "tasks": 100,
+        "shape": "fanout",
+        "workers": 32,
+        "inner_repetitions": 10,
+        "go_version": "go1.27.3",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 52330,
+            "tasks_per_second": 1910949.7420217847,
+            "allocated_bytes": 28000,
+            "allocation_count": 1036,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 1
+          },
+          {
+            "run": 2,
+            "duration_ns": 52040,
+            "tasks_per_second": 1921598.770176787,
+            "allocated_bytes": 33808,
+            "allocation_count": 1038,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 2
+          },
+          {
+            "run": 3,
+            "duration_ns": 52070,
+            "tasks_per_second": 1920491.6458613405,
+            "allocated_bytes": 31232,
+            "allocation_count": 1041,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 3
+          },
+          {
+            "run": 4,
+            "duration_ns": 22170,
+            "tasks_per_second": 4510599.909788002,
+            "allocated_bytes": 36144,
+            "allocation_count": 1052,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 4
+          },
+          {
+            "run": 5,
+            "duration_ns": 52040,
+            "tasks_per_second": 1921598.770176787,
+            "allocated_bytes": 35552,
+            "allocation_count": 1050,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 5
+          },
+          {
+            "run": 6,
+            "duration_ns": 52650,
+            "tasks_per_second": 1899335.232668566,
+            "allocated_bytes": 26320,
+            "allocation_count": 1030,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 1
+          },
+          {
+            "run": 7,
+            "duration_ns": 1,
+            "tasks_per_second": 100000000000,
+            "allocated_bytes": 26320,
+            "allocation_count": 1030,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 2
+          },
+          {
+            "run": 8,
+            "duration_ns": 1,
+            "tasks_per_second": 100000000000,
+            "allocated_bytes": 28240,
+            "allocation_count": 1034,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 3
+          },
+          {
+            "run": 9,
+            "duration_ns": 5500,
+            "tasks_per_second": 18181818.181818184,
+            "allocated_bytes": 32848,
+            "allocation_count": 1036,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 4
+          },
+          {
+            "run": 10,
+            "duration_ns": 23420,
+            "tasks_per_second": 4269854.824935952,
+            "allocated_bytes": 28464,
+            "allocation_count": 1036,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 5
+          },
+          {
+            "run": 11,
+            "duration_ns": 1,
+            "tasks_per_second": 100000000000,
+            "allocated_bytes": 30240,
+            "allocation_count": 1042,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 1
+          },
+          {
+            "run": 12,
+            "duration_ns": 52050,
+            "tasks_per_second": 1921229.586935639,
+            "allocated_bytes": 43792,
+            "allocation_count": 1059,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 2
+          },
+          {
+            "run": 13,
+            "duration_ns": 52170,
+            "tasks_per_second": 1916810.4274487253,
+            "allocated_bytes": 34960,
+            "allocation_count": 1048,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 3
+          },
+          {
+            "run": 14,
+            "duration_ns": 53330,
+            "tasks_per_second": 1875117.1948246765,
+            "allocated_bytes": 26912,
+            "allocation_count": 1032,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 4
+          },
+          {
+            "run": 15,
+            "duration_ns": 52360,
+            "tasks_per_second": 1909854.8510313216,
+            "allocated_bytes": 39136,
+            "allocation_count": 1059,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 5
+          }
+        ]
+      },
+      "summary": {
+        "runs": 15,
+        "min_ms": 1e-06,
+        "median_ms": 0.05204,
+        "median_absolute_deviation_ms": 0.00061,
+        "p95_ms": 0.05333,
+        "max_ms": 0.05333,
+        "median_tasks_per_second": 1921598.770176787
+      }
+    },
+    {
+      "shape": "fanout",
+      "tasks": 100,
+      "command": [
+        "./bin/skein-bench.exe",
+        "--candidate",
+        "skein",
+        "--shape",
+        "fanout",
+        "--tasks",
+        "100",
+        "--runs",
+        "5",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "skein",
+        "tasks": 100,
+        "shape": "fanout",
+        "workers": 32,
+        "inner_repetitions": 1,
+        "go_version": "go1.27.3",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 1073200,
+            "tasks_per_second": 93179.27692881103,
+            "allocated_bytes": 197032,
+            "allocation_count": 1055,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 1
+          },
+          {
+            "run": 2,
+            "duration_ns": 532800,
+            "tasks_per_second": 187687.68768768766,
+            "allocated_bytes": 174568,
+            "allocation_count": 1004,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 2
+          },
+          {
+            "run": 3,
+            "duration_ns": 1034100,
+            "tasks_per_second": 96702.44657189827,
+            "allocated_bytes": 169912,
+            "allocation_count": 1002,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 3
+          },
+          {
+            "run": 4,
+            "duration_ns": 1041800,
+            "tasks_per_second": 95987.71357266269,
+            "allocated_bytes": 172088,
+            "allocation_count": 1011,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 4
+          },
+          {
+            "run": 5,
+            "duration_ns": 1044100,
+            "tasks_per_second": 95776.26664112632,
+            "allocated_bytes": 165480,
+            "allocation_count": 993,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 5
+          },
+          {
+            "run": 6,
+            "duration_ns": 1071000,
+            "tasks_per_second": 93370.68160597573,
+            "allocated_bytes": 187880,
+            "allocation_count": 1041,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 1
+          },
+          {
+            "run": 7,
+            "duration_ns": 1048900,
+            "tasks_per_second": 95337.97311469159,
+            "allocated_bytes": 184248,
+            "allocation_count": 1016,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 2
+          },
+          {
+            "run": 8,
+            "duration_ns": 1040800,
+            "tasks_per_second": 96079.93850883936,
+            "allocated_bytes": 169096,
+            "allocation_count": 1015,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 3
+          },
+          {
+            "run": 9,
+            "duration_ns": 517700,
+            "tasks_per_second": 193162.06297083254,
+            "allocated_bytes": 166904,
+            "allocation_count": 1008,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 4
+          },
+          {
+            "run": 10,
+            "duration_ns": 1059000,
+            "tasks_per_second": 94428.70632672332,
+            "allocated_bytes": 167560,
+            "allocation_count": 1002,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 5
+          },
+          {
+            "run": 11,
+            "duration_ns": 1297000,
+            "tasks_per_second": 77101.00231303007,
+            "allocated_bytes": 190936,
+            "allocation_count": 1059,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 1
+          },
+          {
+            "run": 12,
+            "duration_ns": 1063500,
+            "tasks_per_second": 94029.14903620123,
+            "allocated_bytes": 190952,
+            "allocation_count": 1029,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 2
+          },
+          {
+            "run": 13,
+            "duration_ns": 1039800,
+            "tasks_per_second": 96172.34083477591,
+            "allocated_bytes": 166136,
+            "allocation_count": 1000,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 3
+          },
+          {
+            "run": 14,
+            "duration_ns": 1083000,
+            "tasks_per_second": 92336.10341643583,
+            "allocated_bytes": 165880,
+            "allocation_count": 998,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 4
+          },
+          {
+            "run": 15,
+            "duration_ns": 1094000,
+            "tasks_per_second": 91407.67824497259,
+            "allocated_bytes": 197160,
+            "allocation_count": 1071,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 5
+          }
+        ]
+      },
+      "summary": {
+        "runs": 15,
+        "min_ms": 0.5177,
+        "median_ms": 1.0489,
+        "median_absolute_deviation_ms": 0.0148,
+        "p95_ms": 1.297,
+        "max_ms": 1.297,
+        "median_tasks_per_second": 95337.97311469159
+      }
+    },
+    {
+      "shape": "fanout",
+      "tasks": 100,
+      "command": [
+        "F:\\Паритет агенты\\skein\\bench\\.venv\\Scripts\\python.exe",
+        "F:\\Паритет агенты\\skein\\bench\\python_candidate.py",
+        "--candidate",
+        "asyncio",
+        "--shape",
+        "fanout",
+        "--tasks",
+        "100",
+        "--runs",
+        "5",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "asyncio",
+        "candidate_version": "3.12.16",
+        "tasks": 100,
+        "shape": "fanout",
+        "python": "3.12.16",
+        "implementation": "CPython",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 805000,
+            "tasks_per_second": 124223.60248447204,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 1
+          },
+          {
+            "run": 2,
+            "duration_ns": 783200,
+            "tasks_per_second": 127681.30745658836,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 2
+          },
+          {
+            "run": 3,
+            "duration_ns": 769900,
+            "tasks_per_second": 129886.99831146903,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 3
+          },
+          {
+            "run": 4,
+            "duration_ns": 763400,
+            "tasks_per_second": 130992.92638197537,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 4
+          },
+          {
+            "run": 5,
+            "duration_ns": 757000,
+            "tasks_per_second": 132100.3963011889,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 5
+          },
+          {
+            "run": 6,
+            "duration_ns": 826800,
+            "tasks_per_second": 120948.23415578132,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 1
+          },
+          {
+            "run": 7,
+            "duration_ns": 797600,
+            "tasks_per_second": 125376.12838515548,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 2
+          },
+          {
+            "run": 8,
+            "duration_ns": 802100,
+            "tasks_per_second": 124672.73407305822,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 3
+          },
+          {
+            "run": 9,
+            "duration_ns": 809100,
+            "tasks_per_second": 123594.1169200346,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 4
+          },
+          {
+            "run": 10,
+            "duration_ns": 786600,
+            "tasks_per_second": 127129.4177472667,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 5
+          },
+          {
+            "run": 11,
+            "duration_ns": 788200,
+            "tasks_per_second": 126871.35244861711,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 1
+          },
+          {
+            "run": 12,
+            "duration_ns": 796900,
+            "tasks_per_second": 125486.25925461162,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 2
+          },
+          {
+            "run": 13,
+            "duration_ns": 793400,
+            "tasks_per_second": 126039.82858583312,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 3
+          },
+          {
+            "run": 14,
+            "duration_ns": 780900,
+            "tasks_per_second": 128057.36970162633,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 4
+          },
+          {
+            "run": 15,
+            "duration_ns": 762200,
+            "tasks_per_second": 131199.16032537393,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 5
+          }
+        ]
+      },
+      "summary": {
+        "runs": 15,
+        "min_ms": 0.757,
+        "median_ms": 0.7882,
+        "median_absolute_deviation_ms": 0.0139,
+        "p95_ms": 0.8268,
+        "max_ms": 0.8268,
+        "median_tasks_per_second": 126871.35244861711
+      }
+    },
+    {
+      "shape": "fanout",
+      "tasks": 100,
+      "command": [
+        "F:\\Паритет агенты\\skein\\bench\\.venv\\Scripts\\python.exe",
+        "F:\\Паритет агенты\\skein\\bench\\python_candidate.py",
+        "--candidate",
+        "langgraph",
+        "--shape",
+        "fanout",
+        "--tasks",
+        "100",
+        "--runs",
+        "5",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "langgraph",
+        "candidate_version": "1.2.19",
+        "tasks": 100,
+        "shape": "fanout",
+        "python": "3.12.16",
+        "implementation": "CPython",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 21962900,
+            "tasks_per_second": 4553.1327830113505,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 1
+          },
+          {
+            "run": 2,
+            "duration_ns": 21649700,
+            "tasks_per_second": 4619.001648983589,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 2
+          },
+          {
+            "run": 3,
+            "duration_ns": 22337200,
+            "tasks_per_second": 4476.8368461579785,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 3
+          },
+          {
+            "run": 4,
+            "duration_ns": 22013800,
+            "tasks_per_second": 4542.6050931688305,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 4
+          },
+          {
+            "run": 5,
+            "duration_ns": 43481400,
+            "tasks_per_second": 2299.8339519886663,
+            "succeeded": 100,
+            "batch": 1,
+            "batch_run": 5
+          },
+          {
+            "run": 6,
+            "duration_ns": 22807900,
+            "tasks_per_second": 4384.4457402917415,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 1
+          },
+          {
+            "run": 7,
+            "duration_ns": 22052600,
+            "tasks_per_second": 4534.612698729402,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 2
+          },
+          {
+            "run": 8,
+            "duration_ns": 22169800,
+            "tasks_per_second": 4510.640601178179,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 3
+          },
+          {
+            "run": 9,
+            "duration_ns": 22038500,
+            "tasks_per_second": 4537.513896136307,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 4
+          },
+          {
+            "run": 10,
+            "duration_ns": 44985600,
+            "tasks_per_second": 2222.93356096173,
+            "succeeded": 100,
+            "batch": 2,
+            "batch_run": 5
+          },
+          {
+            "run": 11,
+            "duration_ns": 22504900,
+            "tasks_per_second": 4443.476753951361,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 1
+          },
+          {
+            "run": 12,
+            "duration_ns": 21780400,
+            "tasks_per_second": 4591.283906631651,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 2
+          },
+          {
+            "run": 13,
+            "duration_ns": 22614800,
+            "tasks_per_second": 4421.883014662964,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 3
+          },
+          {
+            "run": 14,
+            "duration_ns": 21872100,
+            "tasks_per_second": 4572.034692599248,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 4
+          },
+          {
+            "run": 15,
+            "duration_ns": 49959100,
+            "tasks_per_second": 2001.637339343583,
+            "succeeded": 100,
+            "batch": 3,
+            "batch_run": 5
+          }
+        ]
+      },
+      "summary": {
+        "runs": 15,
+        "min_ms": 21.6497,
+        "median_ms": 22.1698,
+        "median_absolute_deviation_ms": 0.3351,
+        "p95_ms": 49.9591,
+        "max_ms": 49.9591,
+        "median_tasks_per_second": 4510.640601178179
+      }
+    },
+    {
+      "shape": "fanout",
+      "tasks": 1000,
+      "command": [
+        "./bin/skein-bench.exe",
+        "--candidate",
+        "go",
+        "--shape",
+        "fanout",
+        "--tasks",
+        "1000",
+        "--runs",
+        "5",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "go-goroutines",
+        "tasks": 1000,
+        "shape": "fanout",
+        "workers": 32,
+        "inner_repetitions": 10,
+        "go_version": "go1.27.3",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 156500,
+            "tasks_per_second": 6389776.357827475,
+            "allocated_bytes": 264272,
+            "allocation_count": 10079,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 1
+          },
+          {
+            "run": 2,
+            "duration_ns": 104490,
+            "tasks_per_second": 9570293.808019906,
+            "allocated_bytes": 251552,
+            "allocation_count": 10050,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 2
+          },
+          {
+            "run": 3,
+            "duration_ns": 137590,
+            "tasks_per_second": 7267970.05596337,
+            "allocated_bytes": 262272,
+            "allocation_count": 10058,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 3
+          },
+          {
+            "run": 4,
+            "duration_ns": 118530,
+            "tasks_per_second": 8436682.69636379,
+            "allocated_bytes": 254544,
+            "allocation_count": 10057,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 4
+          },
+          {
+            "run": 5,
+            "duration_ns": 103820,
+            "tasks_per_second": 9632055.480639568,
+            "allocated_bytes": 244720,
+            "allocation_count": 10035,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 5
+          },
+          {
+            "run": 6,
+            "duration_ns": 164470,
+            "tasks_per_second": 6080136.1950507695,
+            "allocated_bytes": 269216,
+            "allocation_count": 10074,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 1
+          },
+          {
+            "run": 7,
+            "duration_ns": 156470,
+            "tasks_per_second": 6391001.469930338,
+            "allocated_bytes": 264736,
+            "allocation_count": 10079,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 2
+          },
+          {
+            "run": 8,
+            "duration_ns": 135260,
+            "tasks_per_second": 7393168.71211001,
+            "allocated_bytes": 242672,
+            "allocation_count": 10034,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 3
+          },
+          {
+            "run": 9,
+            "duration_ns": 103240,
+            "tasks_per_second": 9686168.151879117,
+            "allocated_bytes": 242320,
+            "allocation_count": 10030,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 4
+          },
+          {
+            "run": 10,
+            "duration_ns": 105120,
+            "tasks_per_second": 9512937.595129376,
+            "allocated_bytes": 243280,
+            "allocation_count": 10032,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 5
+          },
+          {
+            "run": 11,
+            "duration_ns": 102950,
+            "tasks_per_second": 9713453.132588636,
+            "allocated_bytes": 244368,
+            "allocation_count": 10036,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 1
+          },
+          {
+            "run": 12,
+            "duration_ns": 157870,
+            "tasks_per_second": 6334325.711028061,
+            "allocated_bytes": 261824,
+            "allocation_count": 10076,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 2
+          },
+          {
+            "run": 13,
+            "duration_ns": 181490,
+            "tasks_per_second": 5509945.45154003,
+            "allocated_bytes": 268448,
+            "allocation_count": 10090,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 3
+          },
+          {
+            "run": 14,
+            "duration_ns": 155210,
+            "tasks_per_second": 6442883.834804459,
+            "allocated_bytes": 242544,
+            "allocation_count": 10032,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 4
+          },
+          {
+            "run": 15,
+            "duration_ns": 155120,
+            "tasks_per_second": 6446621.970087674,
+            "allocated_bytes": 242816,
+            "allocation_count": 10032,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 5
+          }
+        ]
+      },
+      "summary": {
+        "runs": 15,
+        "min_ms": 0.10295,
+        "median_ms": 0.13759,
+        "median_absolute_deviation_ms": 0.02028,
+        "p95_ms": 0.18149,
+        "max_ms": 0.18149,
+        "median_tasks_per_second": 7267970.05596337
+      }
+    },
+    {
+      "shape": "fanout",
+      "tasks": 1000,
+      "command": [
+        "./bin/skein-bench.exe",
+        "--candidate",
+        "skein",
+        "--shape",
+        "fanout",
+        "--tasks",
+        "1000",
+        "--runs",
+        "5",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "skein",
+        "tasks": 1000,
+        "shape": "fanout",
+        "workers": 32,
+        "inner_repetitions": 1,
+        "go_version": "go1.27.3",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 1588200,
+            "tasks_per_second": 629643.6217101121,
+            "allocated_bytes": 1702496,
+            "allocation_count": 9113,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 1
+          },
+          {
+            "run": 2,
+            "duration_ns": 2408500,
+            "tasks_per_second": 415196.1801951422,
+            "allocated_bytes": 1721904,
+            "allocation_count": 9168,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 2
+          },
+          {
+            "run": 3,
+            "duration_ns": 2080500,
+            "tasks_per_second": 480653.68901706324,
+            "allocated_bytes": 1725808,
+            "allocation_count": 9182,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 3
+          },
+          {
+            "run": 4,
+            "duration_ns": 2401100,
+            "tasks_per_second": 416475.7819332805,
+            "allocated_bytes": 1704208,
+            "allocation_count": 9137,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 4
+          },
+          {
+            "run": 5,
+            "duration_ns": 2085900,
+            "tasks_per_second": 479409.3676590441,
+            "allocated_bytes": 1701792,
+            "allocation_count": 9110,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 5
+          },
+          {
+            "run": 6,
+            "duration_ns": 2083500,
+            "tasks_per_second": 479961.6030717543,
+            "allocated_bytes": 1717056,
+            "allocation_count": 9157,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 1
+          },
+          {
+            "run": 7,
+            "duration_ns": 1547500,
+            "tasks_per_second": 646203.5541195476,
+            "allocated_bytes": 1718768,
+            "allocation_count": 9160,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 2
+          },
+          {
+            "run": 8,
+            "duration_ns": 2078600,
+            "tasks_per_second": 481093.04339459253,
+            "allocated_bytes": 1710224,
+            "allocation_count": 9130,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 3
+          },
+          {
+            "run": 9,
+            "duration_ns": 2314200,
+            "tasks_per_second": 432114.7696828277,
+            "allocated_bytes": 1705072,
+            "allocation_count": 9114,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 4
+          },
+          {
+            "run": 10,
+            "duration_ns": 1593700,
+            "tasks_per_second": 627470.6657463764,
+            "allocated_bytes": 1701792,
+            "allocation_count": 9110,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 5
+          },
+          {
+            "run": 11,
+            "duration_ns": 2286300,
+            "tasks_per_second": 437387.9193456677,
+            "allocated_bytes": 1711264,
+            "allocation_count": 9132,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 1
+          },
+          {
+            "run": 12,
+            "duration_ns": 2067600,
+            "tasks_per_second": 483652.54401238146,
+            "allocated_bytes": 1742016,
+            "allocation_count": 9215,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 2
+          },
+          {
+            "run": 13,
+            "duration_ns": 1895900,
+            "tasks_per_second": 527453.9796402764,
+            "allocated_bytes": 1707808,
+            "allocation_count": 9125,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 3
+          },
+          {
+            "run": 14,
+            "duration_ns": 2102000,
+            "tasks_per_second": 475737.3929590866,
+            "allocated_bytes": 1701808,
+            "allocation_count": 9111,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 4
+          },
+          {
+            "run": 15,
+            "duration_ns": 1917800,
+            "tasks_per_second": 521430.80613202625,
+            "allocated_bytes": 1738240,
+            "allocation_count": 9183,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 5
+          }
+        ]
+      },
+      "summary": {
+        "runs": 15,
+        "min_ms": 1.5475,
+        "median_ms": 2.0805,
+        "median_absolute_deviation_ms": 0.1846,
+        "p95_ms": 2.4085,
+        "max_ms": 2.4085,
+        "median_tasks_per_second": 480653.68901706324
+      }
+    },
+    {
+      "shape": "fanout",
+      "tasks": 1000,
+      "command": [
+        "F:\\Паритет агенты\\skein\\bench\\.venv\\Scripts\\python.exe",
+        "F:\\Паритет агенты\\skein\\bench\\python_candidate.py",
+        "--candidate",
+        "asyncio",
+        "--shape",
+        "fanout",
+        "--tasks",
+        "1000",
+        "--runs",
+        "5",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "asyncio",
+        "candidate_version": "3.12.16",
+        "tasks": 1000,
+        "shape": "fanout",
+        "python": "3.12.16",
+        "implementation": "CPython",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 3765700,
+            "tasks_per_second": 265554.8769153146,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 1
+          },
+          {
+            "run": 2,
+            "duration_ns": 3818300,
+            "tasks_per_second": 261896.65557970823,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 2
+          },
+          {
+            "run": 3,
+            "duration_ns": 3855700,
+            "tasks_per_second": 259356.2777187022,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 3
+          },
+          {
+            "run": 4,
+            "duration_ns": 4011800,
+            "tasks_per_second": 249264.66922578393,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 4
+          },
+          {
+            "run": 5,
+            "duration_ns": 3768200,
+            "tasks_per_second": 265378.6953983334,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 5
+          },
+          {
+            "run": 6,
+            "duration_ns": 3696300,
+            "tasks_per_second": 270540.8110813516,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 1
+          },
+          {
+            "run": 7,
+            "duration_ns": 3794600,
+            "tasks_per_second": 263532.38813050126,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 2
+          },
+          {
+            "run": 8,
+            "duration_ns": 3865400,
+            "tasks_per_second": 258705.4379883065,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 3
+          },
+          {
+            "run": 9,
+            "duration_ns": 4036300,
+            "tasks_per_second": 247751.65374228876,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 4
+          },
+          {
+            "run": 10,
+            "duration_ns": 3748000,
+            "tasks_per_second": 266808.96478121664,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 5
+          },
+          {
+            "run": 11,
+            "duration_ns": 3773900,
+            "tasks_per_second": 264977.87434749195,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 1
+          },
+          {
+            "run": 12,
+            "duration_ns": 3793900,
+            "tasks_per_second": 263581.0116239226,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 2
+          },
+          {
+            "run": 13,
+            "duration_ns": 3864300,
+            "tasks_per_second": 258779.0802991486,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 3
+          },
+          {
+            "run": 14,
+            "duration_ns": 3896900,
+            "tasks_per_second": 256614.23182529703,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 4
+          },
+          {
+            "run": 15,
+            "duration_ns": 3748800,
+            "tasks_per_second": 266752.0273154076,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 5
+          }
+        ]
+      },
+      "summary": {
+        "runs": 15,
+        "min_ms": 3.6963,
+        "median_ms": 3.7946,
+        "median_absolute_deviation_ms": 0.0466,
+        "p95_ms": 4.0363,
+        "max_ms": 4.0363,
+        "median_tasks_per_second": 263532.38813050126
+      }
+    },
+    {
+      "shape": "fanout",
+      "tasks": 1000,
+      "command": [
+        "F:\\Паритет агенты\\skein\\bench\\.venv\\Scripts\\python.exe",
+        "F:\\Паритет агенты\\skein\\bench\\python_candidate.py",
+        "--candidate",
+        "langgraph",
+        "--shape",
+        "fanout",
+        "--tasks",
+        "1000",
+        "--runs",
+        "5",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "langgraph",
+        "candidate_version": "1.2.19",
+        "tasks": 1000,
+        "shape": "fanout",
+        "python": "3.12.16",
+        "implementation": "CPython",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 933707600,
+            "tasks_per_second": 1070.999100789155,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 1
+          },
+          {
+            "run": 2,
+            "duration_ns": 915108800,
+            "tasks_per_second": 1092.7662371949652,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 2
+          },
+          {
+            "run": 3,
+            "duration_ns": 892522400,
+            "tasks_per_second": 1120.4200589251316,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 3
+          },
+          {
+            "run": 4,
+            "duration_ns": 985827300,
+            "tasks_per_second": 1014.3764531576677,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 4
+          },
+          {
+            "run": 5,
+            "duration_ns": 795697000,
+            "tasks_per_second": 1256.7597967568056,
+            "succeeded": 1000,
+            "batch": 1,
+            "batch_run": 5
+          },
+          {
+            "run": 6,
+            "duration_ns": 906873900,
+            "tasks_per_second": 1102.6891390302444,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 1
+          },
+          {
+            "run": 7,
+            "duration_ns": 832537600,
+            "tasks_per_second": 1201.1469512007625,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 2
+          },
+          {
+            "run": 8,
+            "duration_ns": 873643100,
+            "tasks_per_second": 1144.632173023515,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 3
+          },
+          {
+            "run": 9,
+            "duration_ns": 972079700,
+            "tasks_per_second": 1028.7222333724283,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 4
+          },
+          {
+            "run": 10,
+            "duration_ns": 823655400,
+            "tasks_per_second": 1214.0999743339264,
+            "succeeded": 1000,
+            "batch": 2,
+            "batch_run": 5
+          },
+          {
+            "run": 11,
+            "duration_ns": 971581700,
+            "tasks_per_second": 1029.249521682016,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 1
+          },
+          {
+            "run": 12,
+            "duration_ns": 801319100,
+            "tasks_per_second": 1247.942299141503,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 2
+          },
+          {
+            "run": 13,
+            "duration_ns": 857563300,
+            "tasks_per_second": 1166.0946777922982,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 3
+          },
+          {
+            "run": 14,
+            "duration_ns": 987460900,
+            "tasks_per_second": 1012.6983255742076,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 4
+          },
+          {
+            "run": 15,
+            "duration_ns": 803269300,
+            "tasks_per_second": 1244.912509416207,
+            "succeeded": 1000,
+            "batch": 3,
+            "batch_run": 5
+          }
+        ]
+      },
+      "summary": {
+        "runs": 15,
+        "min_ms": 795.697,
+        "median_ms": 892.5224,
+        "median_absolute_deviation_ms": 68.867,
+        "p95_ms": 987.4609,
+        "max_ms": 987.4609,
+        "median_tasks_per_second": 1120.4200589251316
+      }
+    },
+    {
+      "shape": "fanout",
+      "tasks": 10000,
+      "command": [
+        "./bin/skein-bench.exe",
+        "--candidate",
+        "go",
+        "--shape",
+        "fanout",
+        "--tasks",
+        "10000",
+        "--runs",
+        "5",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "go-goroutines",
+        "tasks": 10000,
+        "shape": "fanout",
+        "workers": 32,
+        "inner_repetitions": 10,
+        "go_version": "go1.27.3",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 1293420,
+            "tasks_per_second": 7731440.676655688,
+            "allocated_bytes": 2419440,
+            "allocation_count": 100072,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 1
+          },
+          {
+            "run": 2,
+            "duration_ns": 1232530,
+            "tasks_per_second": 8113392.77745775,
+            "allocated_bytes": 2403504,
+            "allocation_count": 100034,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 2
+          },
+          {
+            "run": 3,
+            "duration_ns": 1096480,
+            "tasks_per_second": 9120093.38975631,
+            "allocated_bytes": 2419168,
+            "allocation_count": 100050,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 3
+          },
+          {
+            "run": 4,
+            "duration_ns": 1352990,
+            "tasks_per_second": 7391037.627772562,
+            "allocated_bytes": 2404368,
+            "allocation_count": 100036,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 4
+          },
+          {
+            "run": 5,
+            "duration_ns": 1496810,
+            "tasks_per_second": 6680874.6601105025,
+            "allocated_bytes": 2455840,
+            "allocation_count": 100144,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 5
+          },
+          {
+            "run": 6,
+            "duration_ns": 1284470,
+            "tasks_per_second": 7785312.229946982,
+            "allocated_bytes": 2422352,
+            "allocation_count": 100075,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 1
+          },
+          {
+            "run": 7,
+            "duration_ns": 1197560,
+            "tasks_per_second": 8350312.301680082,
+            "allocated_bytes": 2418128,
+            "allocation_count": 100066,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 2
+          },
+          {
+            "run": 8,
+            "duration_ns": 1465270,
+            "tasks_per_second": 6824680.775556723,
+            "allocated_bytes": 2537688,
+            "allocation_count": 100483,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 3
+          },
+          {
+            "run": 9,
+            "duration_ns": 1255730,
+            "tasks_per_second": 7963495.337373479,
+            "allocated_bytes": 2402656,
+            "allocation_count": 100033,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 4
+          },
+          {
+            "run": 10,
+            "duration_ns": 1145640,
+            "tasks_per_second": 8728745.504696064,
+            "allocated_bytes": 2402560,
+            "allocation_count": 100033,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 5
+          },
+          {
+            "run": 11,
+            "duration_ns": 1004540,
+            "tasks_per_second": 9954805.18446254,
+            "allocated_bytes": 2416704,
+            "allocation_count": 100064,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 1
+          },
+          {
+            "run": 12,
+            "duration_ns": 1516970,
+            "tasks_per_second": 6592088.1757714385,
+            "allocated_bytes": 2411296,
+            "allocation_count": 100051,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 2
+          },
+          {
+            "run": 13,
+            "duration_ns": 1537530,
+            "tasks_per_second": 6503938.134540464,
+            "allocated_bytes": 2416224,
+            "allocation_count": 100063,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 3
+          },
+          {
+            "run": 14,
+            "duration_ns": 1351490,
+            "tasks_per_second": 7399240.837890033,
+            "allocated_bytes": 2407472,
+            "allocation_count": 100044,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 4
+          },
+          {
+            "run": 15,
+            "duration_ns": 1206900,
+            "tasks_per_second": 8285690.612312537,
+            "allocated_bytes": 2402432,
+            "allocation_count": 100031,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 5
+          }
+        ]
+      },
+      "summary": {
+        "runs": 15,
+        "min_ms": 1.00454,
+        "median_ms": 1.28447,
+        "median_absolute_deviation_ms": 0.08691,
+        "p95_ms": 1.53753,
+        "max_ms": 1.53753,
+        "median_tasks_per_second": 7785312.229946982
+      }
+    },
+    {
+      "shape": "fanout",
+      "tasks": 10000,
+      "command": [
+        "./bin/skein-bench.exe",
+        "--candidate",
+        "skein",
+        "--shape",
+        "fanout",
+        "--tasks",
+        "10000",
+        "--runs",
+        "5",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "skein",
+        "tasks": 10000,
+        "shape": "fanout",
+        "workers": 32,
+        "inner_repetitions": 1,
+        "go_version": "go1.27.3",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 14999000,
+            "tasks_per_second": 666711.1140742716,
+            "allocated_bytes": 15993976,
+            "allocation_count": 90379,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 1
+          },
+          {
+            "run": 2,
+            "duration_ns": 15503800,
+            "tasks_per_second": 645003.1605154865,
+            "allocated_bytes": 15991736,
+            "allocation_count": 90376,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 2
+          },
+          {
+            "run": 3,
+            "duration_ns": 17579600,
+            "tasks_per_second": 568841.1567953764,
+            "allocated_bytes": 16028160,
+            "allocation_count": 90471,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 3
+          },
+          {
+            "run": 4,
+            "duration_ns": 18489600,
+            "tasks_per_second": 540844.5829006577,
+            "allocated_bytes": 15978680,
+            "allocation_count": 90346,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 4
+          },
+          {
+            "run": 5,
+            "duration_ns": 17326800,
+            "tasks_per_second": 577140.6145393264,
+            "allocated_bytes": 15983664,
+            "allocation_count": 90351,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 5
+          },
+          {
+            "run": 6,
+            "duration_ns": 14480400,
+            "tasks_per_second": 690588.6577718848,
+            "allocated_bytes": 15984336,
+            "allocation_count": 90359,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 1
+          },
+          {
+            "run": 7,
+            "duration_ns": 16009200,
+            "tasks_per_second": 624640.8315218749,
+            "allocated_bytes": 15978680,
+            "allocation_count": 90346,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 2
+          },
+          {
+            "run": 8,
+            "duration_ns": 17139800,
+            "tasks_per_second": 583437.3796660404,
+            "allocated_bytes": 15979480,
+            "allocation_count": 90355,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 3
+          },
+          {
+            "run": 9,
+            "duration_ns": 17018800,
+            "tasks_per_second": 587585.4936893318,
+            "allocated_bytes": 15988776,
+            "allocation_count": 90368,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 4
+          },
+          {
+            "run": 10,
+            "duration_ns": 14743700,
+            "tasks_per_second": 678255.7973914281,
+            "allocated_bytes": 15985312,
+            "allocation_count": 90358,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 5
+          },
+          {
+            "run": 11,
+            "duration_ns": 16748300,
+            "tasks_per_second": 597075.5240830412,
+            "allocated_bytes": 16022744,
+            "allocation_count": 90438,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 1
+          },
+          {
+            "run": 12,
+            "duration_ns": 17050900,
+            "tasks_per_second": 586479.306077685,
+            "allocated_bytes": 15983792,
+            "allocation_count": 90353,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 2
+          },
+          {
+            "run": 13,
+            "duration_ns": 18142900,
+            "tasks_per_second": 551179.8003626763,
+            "allocated_bytes": 15984216,
+            "allocation_count": 90356,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 3
+          },
+          {
+            "run": 14,
+            "duration_ns": 17461300,
+            "tasks_per_second": 572695.0456151604,
+            "allocated_bytes": 15998104,
+            "allocation_count": 90385,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 4
+          },
+          {
+            "run": 15,
+            "duration_ns": 16347200,
+            "tasks_per_second": 611725.5554468044,
+            "allocated_bytes": 15989720,
+            "allocation_count": 90369,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 5
+          }
+        ]
+      },
+      "summary": {
+        "runs": 15,
+        "min_ms": 14.4804,
+        "median_ms": 17.0188,
+        "median_absolute_deviation_ms": 0.6716,
+        "p95_ms": 18.4896,
+        "max_ms": 18.4896,
+        "median_tasks_per_second": 587585.4936893318
+      }
+    },
+    {
+      "shape": "fanout",
+      "tasks": 10000,
+      "command": [
+        "F:\\Паритет агенты\\skein\\bench\\.venv\\Scripts\\python.exe",
+        "F:\\Паритет агенты\\skein\\bench\\python_candidate.py",
+        "--candidate",
+        "asyncio",
+        "--shape",
+        "fanout",
+        "--tasks",
+        "10000",
+        "--runs",
+        "5",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "asyncio",
+        "candidate_version": "3.12.16",
+        "tasks": 10000,
+        "shape": "fanout",
+        "python": "3.12.16",
+        "implementation": "CPython",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 51316400,
+            "tasks_per_second": 194869.47642469074,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 1
+          },
+          {
+            "run": 2,
+            "duration_ns": 42150600,
+            "tasks_per_second": 237244.5469340887,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 2
+          },
+          {
+            "run": 3,
+            "duration_ns": 41542500,
+            "tasks_per_second": 240717.33766624538,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 3
+          },
+          {
+            "run": 4,
+            "duration_ns": 36433600,
+            "tasks_per_second": 274471.91603355145,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 4
+          },
+          {
+            "run": 5,
+            "duration_ns": 39768400,
+            "tasks_per_second": 251455.92983373732,
+            "succeeded": 10000,
+            "batch": 1,
+            "batch_run": 5
+          },
+          {
+            "run": 6,
+            "duration_ns": 40164900,
+            "tasks_per_second": 248973.60630799527,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 1
+          },
+          {
+            "run": 7,
+            "duration_ns": 40530500,
+            "tasks_per_second": 246727.77291175784,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 2
+          },
+          {
+            "run": 8,
+            "duration_ns": 41703800,
+            "tasks_per_second": 239786.30244725902,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 3
+          },
+          {
+            "run": 9,
+            "duration_ns": 36809100,
+            "tasks_per_second": 271671.9506861075,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 4
+          },
+          {
+            "run": 10,
+            "duration_ns": 39743300,
+            "tasks_per_second": 251614.73757840943,
+            "succeeded": 10000,
+            "batch": 2,
+            "batch_run": 5
+          },
+          {
+            "run": 11,
+            "duration_ns": 40202900,
+            "tasks_per_second": 248738.2750995575,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 1
+          },
+          {
+            "run": 12,
+            "duration_ns": 40757600,
+            "tasks_per_second": 245353.01391642296,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 2
+          },
+          {
+            "run": 13,
+            "duration_ns": 41117600,
+            "tasks_per_second": 243204.8563145709,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 3
+          },
+          {
+            "run": 14,
+            "duration_ns": 36358600,
+            "tasks_per_second": 275038.09277584945,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 4
+          },
+          {
+            "run": 15,
+            "duration_ns": 39038400,
+            "tasks_per_second": 256158.03926390424,
+            "succeeded": 10000,
+            "batch": 3,
+            "batch_run": 5
+          }
+        ]
+      },
+      "summary": {
+        "runs": 15,
+        "min_ms": 36.3586,
+        "median_ms": 40.2029,
+        "median_absolute_deviation_ms": 1.1645,
+        "p95_ms": 51.3164,
+        "max_ms": 51.3164,
+        "median_tasks_per_second": 248738.2750995575
+      }
+    }
+  ],
+  "skipped": [
+    {
+      "shape": "fanout",
+      "tasks": 10000,
+      "candidate": "langgraph",
+      "reason": "above configured graph-size limit 1000; no extrapolation"
+    }
+  ]
+}

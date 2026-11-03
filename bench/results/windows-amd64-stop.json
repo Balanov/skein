@@ -1,91 +1,226 @@
 {
-  "schema": 1,
-  "measured_at": "2026-11-02T23:27:08.695012+00:00",
-  "scope": "Wall time from starting the stop CLI until the run process exits after terminating all tracked Python process trees. No model calls. Includes stop-process launch, file propagation, taskkill/process-group termination and report output.",
+  "schema": 2,
+  "measured_at": "2026-11-03T00:51:34.710177+00:00",
+  "scope": "Wall time from starting the stop CLI until the run process exits after terminating tracked real parent/child Python process trees. Includes stop-process launch, latch propagation, process-tree termination and report output. Heartbeat, duplicate-stop and reset checks happen after the measured interval.",
+  "method": "3 unrecorded warmups, then 20 measured runs. Every run starts 8 parents and 8 children. Every child updates an atomic heartbeat file; all heartbeats must remain unchanged for 150 ms after the run exits. p95 uses nearest rank.",
   "machine": {
     "platform": "Windows-11-10.0.28020-SP0",
     "machine": "AMD64",
     "processor": "AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD",
-    "logical_cpus": 32
+    "logical_cpus": 32,
+    "python": "3.12.16"
   },
+  "warmup_runs": 3,
   "tasks_per_run": 8,
+  "processes_per_run": 16,
   "samples": [
     {
       "run": 1,
-      "stop_to_all_exited_ns": 143781600,
+      "stop_to_all_exited_ns": 138793900,
       "return_code": 4,
-      "stopped": 8
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
     },
     {
       "run": 2,
-      "stop_to_all_exited_ns": 146291500,
+      "stop_to_all_exited_ns": 142095300,
       "return_code": 4,
-      "stopped": 8
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
     },
     {
       "run": 3,
-      "stop_to_all_exited_ns": 133132700,
+      "stop_to_all_exited_ns": 142997400,
       "return_code": 4,
-      "stopped": 8
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
     },
     {
       "run": 4,
-      "stop_to_all_exited_ns": 133876000,
+      "stop_to_all_exited_ns": 129836600,
       "return_code": 4,
-      "stopped": 8
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
     },
     {
       "run": 5,
-      "stop_to_all_exited_ns": 142168800,
+      "stop_to_all_exited_ns": 137798300,
       "return_code": 4,
-      "stopped": 8
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
     },
     {
       "run": 6,
-      "stop_to_all_exited_ns": 132699000,
+      "stop_to_all_exited_ns": 141786800,
       "return_code": 4,
-      "stopped": 8
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
     },
     {
       "run": 7,
-      "stop_to_all_exited_ns": 132560200,
+      "stop_to_all_exited_ns": 142715000,
       "return_code": 4,
-      "stopped": 8
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
     },
     {
       "run": 8,
-      "stop_to_all_exited_ns": 134493600,
+      "stop_to_all_exited_ns": 141538700,
       "return_code": 4,
-      "stopped": 8
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
     },
     {
       "run": 9,
-      "stop_to_all_exited_ns": 136970300,
+      "stop_to_all_exited_ns": 140054800,
       "return_code": 4,
-      "stopped": 8
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
     },
     {
       "run": 10,
-      "stop_to_all_exited_ns": 127320300,
+      "stop_to_all_exited_ns": 143791900,
       "return_code": 4,
-      "stopped": 8
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
     },
     {
       "run": 11,
-      "stop_to_all_exited_ns": 128491200,
+      "stop_to_all_exited_ns": 147233700,
       "return_code": 4,
-      "stopped": 8
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
     },
     {
       "run": 12,
-      "stop_to_all_exited_ns": 137170500,
+      "stop_to_all_exited_ns": 142137800,
       "return_code": 4,
-      "stopped": 8
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
+    },
+    {
+      "run": 13,
+      "stop_to_all_exited_ns": 163893900,
+      "return_code": 4,
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
+    },
+    {
+      "run": 14,
+      "stop_to_all_exited_ns": 132413000,
+      "return_code": 4,
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
+    },
+    {
+      "run": 15,
+      "stop_to_all_exited_ns": 132742300,
+      "return_code": 4,
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
+    },
+    {
+      "run": 16,
+      "stop_to_all_exited_ns": 149564200,
+      "return_code": 4,
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
+    },
+    {
+      "run": 17,
+      "stop_to_all_exited_ns": 138366500,
+      "return_code": 4,
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
+    },
+    {
+      "run": 18,
+      "stop_to_all_exited_ns": 132642000,
+      "return_code": 4,
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
+    },
+    {
+      "run": 19,
+      "stop_to_all_exited_ns": 150563500,
+      "return_code": 4,
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
+    },
+    {
+      "run": 20,
+      "stop_to_all_exited_ns": 136309200,
+      "return_code": 4,
+      "stopped": 8,
+      "parent_child_trees": 8,
+      "child_heartbeats_frozen": true,
+      "duplicate_stop_preserved_epoch": true,
+      "reset_preserved_epoch": true
     }
   ],
   "summary": {
-    "median_ms": 134.1848,
-    "p95_ms": 146.2915,
-    "max_ms": 146.2915
+    "runs": 20,
+    "median_ms": 141.66275,
+    "p95_ms": 150.5635,
+    "max_ms": 163.8939,
+    "trees_stopped": 160,
+    "child_heartbeats_verified_frozen": 160
   }
 }

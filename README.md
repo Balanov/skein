@@ -102,9 +102,19 @@ See [SECURITY.md](SECURITY.md) before deployment and [docs/ARCHITECTURE.md](docs
 
 ## Measurements
 
-On the recorded Windows 11 / Ryzen 9 5950X environment, Skein scheduled **100,000 independent no-op tasks in 116.676 ms median** (**857,076 tasks/s**). For 1,000 independent no-op tasks, its median was **1.558 ms**, compared with **10.908 ms** for asyncio and **2,461.654 ms** for LangGraph. The stop proof stopped **8 real process trees in 134.185 ms median** over 12 runs.
+Recorded on Windows 11 / Ryzen 9 5950X, each warm result is the median of 15 interleaved samples. All candidates execute the same no-op graph; Skein validates its manifest on every sample.
 
-These are local control-plane observations, not universal rankings, model-quality results, or shutdown-deadline guarantees. Candidate startup and LangGraph compilation are outside those samples; Skein validates its in-memory manifest every run. See [BENCHMARKS.md](BENCHMARKS.md) for the full scope, caveats, raw samples, and exact reproduction commands.
+| 1,000-node graph | Raw Go control | Skein | Python asyncio | LangGraph |
+| --- | ---: | ---: | ---: | ---: |
+| Independent | 0.118 ms | **1.580 ms** | 3.530 ms | 876.910 ms |
+| Serial chain | 0.246 ms | **3.272 ms** | 4.479 ms | 534.907 ms |
+| Fan-out / join | 0.138 ms | **2.080 ms** | 3.795 ms | 892.522 ms |
+
+Skein is not ahead everywhere. At 100 independent tasks, asyncio had a lower median (**0.740 ms versus 1.040 ms**). The unstructured raw Go control was **13.31–15.12× faster** than Skein at 1,000 nodes; it omits validation, leases, reports, audit events and stop fencing.
+
+A separate cold-process test launched 24 real Python SHA-256 workers per run. Over 15 fresh-process runs, Skein's median was **156.463 ms**, versus **288.644 ms** for asyncio and **998.010 ms** for LangGraph, with **360 / 360 results verified for every candidate**. The stop proof terminated **160 / 160 real parent/child trees**, froze **160 / 160 child heartbeats**, and had a **141.663 ms median** over 20 runs.
+
+These are local observations, not universal rankings, model-quality results, or shutdown-deadline guarantees. Warm scheduling, cold process dispatch and emergency stop are measured separately. See [BENCHMARKS.md](BENCHMARKS.md) for p95 values, graph scaling, raw samples, counterexamples and exact reproduction commands.
 
 ## Checks
 
@@ -114,7 +124,7 @@ go vet ./...
 go test -race -count=1 ./... # requires CGO and a C compiler
 ```
 
-CI checks formatting, tests, vet, the race detector on Linux, cross-platform compilation, and the frontend build. Cross-compilation does not replace running platform-specific stop tests on every target OS.
+CI checks formatting, tests, vet, the Linux race detector, six cross-platform compile targets, the frontend build, and real CLI and parent/child stop proofs on Ubuntu, Windows and macOS. Cross-compilation is not presented as runtime testing.
 
 ## Landing page
 

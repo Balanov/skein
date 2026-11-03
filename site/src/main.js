@@ -10,12 +10,35 @@ import "@fontsource/ibm-plex-mono/cyrillic-400.css";
 import "@fontsource/ibm-plex-mono/cyrillic-500.css";
 import "./style.css";
 import { messages } from "./i18n.js";
+import { evidence } from "./results.js";
 
 const storedLanguage = localStorage.getItem("skein-language");
 const browserLanguages = navigator.languages || [navigator.language];
 let language = storedLanguage || (browserLanguages.some((item) => item.toLowerCase().startsWith("ru")) ? "ru" : "en");
 let stopped = false;
 let epoch = 1;
+let benchmarkShape = "independent";
+let benchmarkSize = 1000;
+let benchmarkScale = "log";
+const candidateOrder = ["go-goroutines", "skein", "asyncio", "langgraph"];
+
+function text(key, replacements = {}) {
+  let value = messages[language][key] ?? key;
+  for (const [name, replacement] of Object.entries(replacements)) value = value.replaceAll(`{${name}}`, replacement);
+  return value;
+}
+
+function formatNumber(value, digits = 3) {
+  return new Intl.NumberFormat(language === "ru" ? "ru-RU" : "en-US", { maximumFractionDigits: digits }).format(value);
+}
+
+function formatMs(value) {
+  return `${formatNumber(value, 3)} ${language === "ru" ? "мс" : "ms"}`;
+}
+
+function formatRatio(value) {
+  return formatNumber(value, value >= 100 ? 1 : 2);
+}
 
 function translate() {
   document.documentElement.lang = language;
@@ -32,45 +55,160 @@ function translate() {
     if (!button.dataset.copied) button.textContent = messages[language][button.dataset.copyLabel];
   });
   updateDemo();
+  renderBenchmark();
+  renderStopEvidence();
   localStorage.setItem("skein-language", language);
 }
 
 function updateDemo() {
-  const demo = document.querySelector(".swarm-demo");
-  demo.classList.toggle("is-stopped", stopped);
+  document.querySelector(".swarm-demo").classList.toggle("is-stopped", stopped);
   document.querySelector("#epoch-value").textContent = stopped ? `${epoch - 1} → ${epoch}` : String(epoch);
-  const status = document.querySelector("#demo-status");
-  status.textContent = messages[language][stopped ? "demo.stopped" : "demo.running"];
+  document.querySelector("#demo-status").textContent = text(stopped ? "demo.stopped" : "demo.running");
   const button = document.querySelector("#stop-demo");
-  button.textContent = messages[language][stopped ? "demo.reset" : "demo.stop"];
+  button.textContent = text(stopped ? "demo.reset" : "demo.stop");
   button.setAttribute("aria-pressed", String(stopped));
+  const suffix = stopped ? "stop" : "run";
+  for (let index = 1; index <= 3; index++) document.querySelector(`#demo-event-${index}`).textContent = text(`demo.${suffix}${index}`);
 }
 
-document.querySelectorAll("[data-lang]").forEach((button) => {
-  button.addEventListener("click", () => {
-    language = button.dataset.lang;
-    translate();
-  });
-});
+function candidateName(candidate) {
+  if (candidate === "go-goroutines") return "Go goroutines · control";
+  if (candidate === "skein") return "Skein 0.1.0";
+  if (candidate === "asyncio") return "Python asyncio 3.12.16";
+  return "LangGraph 1.2.19";
+}
 
-document.querySelector("#stop-demo").addEventListener("click", () => {
-  if (!stopped) {
-    epoch += 1;
-    stopped = true;
-  } else {
-    stopped = false;
+function currentResults() {
+  if (benchmarkShape === "process") {
+    return evidence.process.results.map((result) => ({
+      tasks: result.tasks,
+      candidate: result.candidate,
+      ...result.summary,
+    }));
   }
-  updateDemo();
-});
+  return evidence.scheduler[benchmarkShape].results.filter((result) => result.tasks === benchmarkSize);
+}
 
-async function copyText(button, text) {
+function availableSizes(shape) {
+  if (shape === "process") return [];
+  return [...new Set(evidence.scheduler[shape].results.map((result) => result.tasks))].sort((a, b) => a - b);
+}
+
+function renderSizes() {
+  const container = document.querySelector("#benchmark-sizes");
+  const sizes = availableSizes(benchmarkShape);
+  container.hidden = benchmarkShape === "process";
+  if (!sizes.includes(benchmarkSize)) benchmarkSize = sizes.includes(1000) ? 1000 : sizes[0];
+  container.replaceChildren(...sizes.map((size) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = formatNumber(size, 0);
+    button.dataset.size = String(size);
+    button.setAttribute("aria-pressed", String(size === benchmarkSize));
+    button.addEventListener("click", () => {
+      benchmarkSize = size;
+      renderBenchmark();
+    });
+    return button;
+  }));
+}
+
+function comparisonText(results) {
+  const values = Object.fromEntries(results.map((result) => [result.candidate, result.median_ms]));
+  if (benchmarkShape === "process") {
+    return text("bench.processProof", {
+      asyncRatio: formatRatio(values.asyncio / values.skein),
+      langRatio: formatRatio(values.langgraph / values.skein),
+    });
+  }
+  const parts = [];
+  if (values.asyncio >= values.skein) parts.push(text("bench.asyncLower", { ratio: formatRatio(values.asyncio / values.skein) }));
+  else parts.push(text("bench.asyncFaster", { ratio: formatRatio(values.skein / values.asyncio) }));
+  if (values.langgraph) parts.push(text("bench.langLower", { ratio: formatRatio(values.langgraph / values.skein) }));
+  parts.push(text("bench.rawGo", { ratio: formatRatio(values.skein / values["go-goroutines"]) }));
+  if (!values.langgraph) parts.push(text("bench.noLanggraph"));
+  return parts.join(" ");
+}
+
+function renderBenchmark() {
+  document.querySelectorAll("[data-shape]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.shape === benchmarkShape)));
+  renderSizes();
+  const results = currentResults().sort((a, b) => candidateOrder.indexOf(a.candidate) - candidateOrder.indexOf(b.candidate));
+  const tasks = benchmarkShape === "process" ? evidence.process.tasks_per_run : benchmarkSize;
+  document.querySelector("#benchmark-title").textContent = `${formatNumber(tasks, 0)} ${text(`shape.${benchmarkShape}Title`)}`;
+  document.querySelector("#benchmark-context").textContent = text(benchmarkShape === "process" ? "bench.cold" : "bench.warm");
+  document.querySelector("#scale-state").textContent = text(`bench.scale.${benchmarkScale}`);
+  const max = Math.max(...results.map((result) => result.median_ms));
+  const chart = document.querySelector("#benchmark-chart");
+  chart.replaceChildren(...results.map((result) => {
+    const row = document.createElement("div");
+    row.className = `bar-row ${result.candidate === "skein" ? "is-skein" : ""}`;
+    const ratio = benchmarkScale === "linear"
+      ? result.median_ms / max
+      : Math.log10(result.median_ms / 0.01) / Math.log10(max / 0.01);
+    const name = document.createElement("span");
+    name.className = "bar-name";
+    name.textContent = candidateName(result.candidate);
+    const track = document.createElement("div");
+    track.className = "bar-track";
+    const fill = document.createElement("div");
+    fill.className = "bar-fill";
+    fill.style.setProperty("--scale", Math.max(0.01, ratio).toFixed(5));
+    track.append(fill);
+    const value = document.createElement("strong");
+    value.className = "bar-value";
+    value.textContent = formatMs(result.median_ms);
+    row.append(name, track, value);
+    return row;
+  }));
+  document.querySelector("#benchmark-insight").textContent = comparisonText(results);
+  const body = document.querySelector("#benchmark-table-body");
+  body.replaceChildren(...results.map((result) => {
+    const row = document.createElement("tr");
+    if (result.candidate === "skein") row.className = "is-skein";
+    const candidate = document.createElement("td");
+    candidate.textContent = candidateName(result.candidate);
+    if (result.candidate === "go-goroutines") {
+      const note = document.createElement("span");
+      note.className = "candidate-note";
+      note.textContent = text("bench.goControl");
+      candidate.append(note);
+    }
+    const values = [formatMs(result.median_ms), formatMs(result.p95_ms), formatNumber(result.median_tasks_per_second, 0), String(result.runs)];
+    row.append(candidate, ...values.map((value) => {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      return cell;
+    }));
+    return row;
+  }));
+  document.querySelector("#benchmark-method").textContent = text(`bench.method.${benchmarkShape === "process" ? "process" : "scheduler"}`);
+  const rawName = benchmarkShape === "process" ? evidence.raw_files.process : evidence.raw_files[benchmarkShape];
+  document.querySelector("#raw-result-link").href = `./results/${rawName}`;
+}
+
+function setupPanels(buttonSelector, prefix, copySelector) {
+  document.querySelectorAll(buttonSelector).forEach((button) => {
+    button.addEventListener("click", () => {
+      const name = button.dataset[button.hasAttribute("data-mechanism-target") ? "mechanismTarget" : "proofTarget"];
+      document.querySelectorAll(buttonSelector).forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+      document.querySelectorAll(`[id^="${prefix}-"]`).forEach((panel) => {
+        if (panel.classList.contains("code-panel")) panel.hidden = panel.id !== `${prefix}-${name}`;
+      });
+      const target = document.querySelector(`#${prefix}-${name} pre`);
+      document.querySelector(copySelector).dataset.copyTarget = `#${target.id}`;
+    });
+  });
+}
+
+async function copyText(button, value) {
   let copied = false;
   try {
-    await navigator.clipboard.writeText(text);
+    await navigator.clipboard.writeText(value);
     copied = true;
   } catch {
     const area = document.createElement("textarea");
-    area.value = text;
+    area.value = value;
     area.style.position = "fixed";
     area.style.opacity = "0";
     document.body.append(area);
@@ -84,18 +222,54 @@ async function copyText(button, text) {
     }
   }
   button.dataset.copied = String(copied);
-  button.textContent = messages[language][copied ? "quick.copied" : "quick.failed"];
+  button.textContent = text(copied ? "quick.copied" : "quick.failed");
   window.setTimeout(() => {
     delete button.dataset.copied;
-    button.textContent = messages[language][button.dataset.copyLabel];
+    button.textContent = text(button.dataset.copyLabel);
   }, 1600);
 }
 
-document.querySelectorAll("[data-copy-target]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const target = document.querySelector(button.dataset.copyTarget);
-    copyText(button, target.textContent.trim());
-  });
+document.querySelectorAll("[data-lang]").forEach((button) => button.addEventListener("click", () => {
+  language = button.dataset.lang;
+  translate();
+}));
+
+document.querySelector("#stop-demo").addEventListener("click", () => {
+  if (!stopped) {
+    epoch += 1;
+    stopped = true;
+  } else {
+    stopped = false;
+  }
+  updateDemo();
 });
+
+document.querySelectorAll("[data-shape]").forEach((button) => button.addEventListener("click", () => {
+  benchmarkShape = button.dataset.shape;
+  renderBenchmark();
+}));
+
+document.querySelector("#scale-toggle").addEventListener("click", () => {
+  benchmarkScale = benchmarkScale === "log" ? "linear" : "log";
+  renderBenchmark();
+});
+
+document.querySelectorAll("[data-copy-target]").forEach((button) => button.addEventListener("click", () => {
+  const target = document.querySelector(button.dataset.copyTarget);
+  copyText(button, target.textContent.trim());
+}));
+
+setupPanels("[data-mechanism-target]", "mechanism", "#mechanism-copy");
+setupPanels("[data-proof-target]", "proof", "#proof-copy");
+
+function renderStopEvidence() {
+  const summary = evidence.stop.summary;
+  document.querySelector("#stop-median").textContent = formatMs(summary.median_ms);
+  document.querySelector("#stop-p95").textContent = formatMs(summary.p95_ms);
+  document.querySelector("#stop-max").textContent = formatMs(summary.max_ms);
+  document.querySelector("#stop-verified").textContent = `${formatNumber(summary.child_heartbeats_verified_frozen, 0)} / ${formatNumber(summary.trees_stopped, 0)}`;
+}
+const multiPass = evidence.functional.scenarios.find((scenario) => scenario.name === "multi_pass_data_flow");
+document.querySelector("#proof-events-code").textContent = multiPass.events.map((event) => JSON.stringify(event)).join("\n");
 
 translate();

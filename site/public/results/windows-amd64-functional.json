@@ -1,0 +1,209 @@
+{
+  "schema": 1,
+  "measured_at": "2026-11-03T00:51:35.019499+00:00",
+  "scope": "Real Skein CLI and real Python workload processes. These scenarios prove behavior, not speed.",
+  "machine": {
+    "platform": "Windows-11-10.0.28020-SP0",
+    "python": "3.12.16"
+  },
+  "summary": {
+    "scenarios": 3,
+    "passed": 3
+  },
+  "scenarios": [
+    {
+      "name": "multi_pass_data_flow",
+      "passed": true,
+      "expected_output": "start:a/1:a/2:b/1",
+      "observed_output": "start:a/1:a/2:b/1",
+      "report": {
+        "version": 1,
+        "status": "succeeded",
+        "started_at": "2026-11-03T00:51:34.8475904Z",
+        "finished_at": "2026-11-03T00:51:34.9483434Z",
+        "duration_ms": 100,
+        "total": 2,
+        "succeeded": 2,
+        "failed": 0,
+        "skipped": 0,
+        "stopped": 0,
+        "tasks": {
+          "a": {
+            "id": "a",
+            "status": "succeeded",
+            "passes_completed": 2,
+            "output_path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\skein-functional-15ps6636\\state\\runs\\ddeaea3a8b631780b49b1c1b\\data\\ca978112ca1bbdcafac231b39a23dc4d.out",
+            "started_at": "2026-11-03T00:51:34.851741Z",
+            "finished_at": "2026-11-03T00:51:34.9165398Z"
+          },
+          "b": {
+            "id": "b",
+            "status": "succeeded",
+            "passes_completed": 1,
+            "output_path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\skein-functional-15ps6636\\state\\runs\\ddeaea3a8b631780b49b1c1b\\data\\3e23e8160039594a33894f6564e1b134.out",
+            "started_at": "2026-11-03T00:51:34.9165398Z",
+            "finished_at": "2026-11-03T00:51:34.9483434Z"
+          }
+        }
+      },
+      "events": [
+        {
+          "seq": 1,
+          "time": "2026-11-03T00:51:34.851741Z",
+          "kind": "run_started",
+          "epoch": 1,
+          "status": "running"
+        },
+        {
+          "seq": 2,
+          "time": "2026-11-03T00:51:34.851741Z",
+          "kind": "task_started",
+          "epoch": 1,
+          "task": "a",
+          "status": "running"
+        },
+        {
+          "seq": 3,
+          "time": "2026-11-03T00:51:34.8522663Z",
+          "kind": "pass_started",
+          "epoch": 1,
+          "task": "a",
+          "pass": 1,
+          "status": "running"
+        },
+        {
+          "seq": 4,
+          "time": "2026-11-03T00:51:34.8837302Z",
+          "kind": "pass_finished",
+          "epoch": 1,
+          "task": "a",
+          "pass": 1,
+          "status": "succeeded"
+        },
+        {
+          "seq": 5,
+          "time": "2026-11-03T00:51:34.8842485Z",
+          "kind": "pass_started",
+          "epoch": 1,
+          "task": "a",
+          "pass": 2,
+          "status": "running"
+        },
+        {
+          "seq": 6,
+          "time": "2026-11-03T00:51:34.9160348Z",
+          "kind": "pass_finished",
+          "epoch": 1,
+          "task": "a",
+          "pass": 2,
+          "status": "succeeded"
+        },
+        {
+          "seq": 7,
+          "time": "2026-11-03T00:51:34.9165398Z",
+          "kind": "task_finished",
+          "epoch": 1,
+          "task": "a",
+          "pass": 2,
+          "status": "succeeded"
+        },
+        {
+          "seq": 8,
+          "time": "2026-11-03T00:51:34.9165398Z",
+          "kind": "task_started",
+          "epoch": 1,
+          "task": "b",
+          "status": "running"
+        },
+        {
+          "seq": 9,
+          "time": "2026-11-03T00:51:34.9170549Z",
+          "kind": "pass_started",
+          "epoch": 1,
+          "task": "b",
+          "pass": 1,
+          "status": "running"
+        },
+        {
+          "seq": 10,
+          "time": "2026-11-03T00:51:34.9478255Z",
+          "kind": "pass_finished",
+          "epoch": 1,
+          "task": "b",
+          "pass": 1,
+          "status": "succeeded"
+        },
+        {
+          "seq": 11,
+          "time": "2026-11-03T00:51:34.9483434Z",
+          "kind": "task_finished",
+          "epoch": 1,
+          "task": "b",
+          "pass": 1,
+          "status": "succeeded"
+        },
+        {
+          "seq": 12,
+          "time": "2026-11-03T00:51:34.9483434Z",
+          "kind": "run_finished",
+          "epoch": 1,
+          "status": "succeeded"
+        }
+      ]
+    },
+    {
+      "name": "dependency_failure_isolation",
+      "passed": true,
+      "expected_exit_code": 3,
+      "observed_exit_code": 3,
+      "statuses": {
+        "bad": "failed",
+        "child": "skipped",
+        "independent": "succeeded"
+      },
+      "report": {
+        "version": 1,
+        "status": "failed",
+        "started_at": "2026-11-03T00:51:34.9646657Z",
+        "finished_at": "2026-11-03T00:51:35.0028282Z",
+        "duration_ms": 38,
+        "total": 3,
+        "succeeded": 1,
+        "failed": 1,
+        "skipped": 1,
+        "stopped": 0,
+        "tasks": {
+          "bad": {
+            "id": "bad",
+            "status": "failed",
+            "passes_completed": 0,
+            "error": "exit code 7",
+            "started_at": "2026-11-03T00:51:34.9683019Z",
+            "finished_at": "2026-11-03T00:51:35.0012486Z"
+          },
+          "child": {
+            "id": "child",
+            "status": "skipped",
+            "passes_completed": 0,
+            "started_at": "0001-01-01T00:00:00Z",
+            "finished_at": "2026-11-03T00:51:35.0012486Z"
+          },
+          "independent": {
+            "id": "independent",
+            "status": "succeeded",
+            "passes_completed": 1,
+            "output_path": "C:\\Users\\Admin\\AppData\\Local\\Temp\\skein-functional-ydn5n2tk\\state\\runs\\d8046c234be6f94dd2e8c4be\\data\\0275fca08c216c77b2a122787b6491a6.out",
+            "started_at": "2026-11-03T00:51:34.9683019Z",
+            "finished_at": "2026-11-03T00:51:35.0028282Z"
+          }
+        }
+      }
+    },
+    {
+      "name": "cycle_rejected_before_execution",
+      "passed": true,
+      "observed_exit_code": 1,
+      "diagnostic": "skein: task graph contains a cycle"
+    }
+  ]
+}

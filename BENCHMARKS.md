@@ -1,62 +1,110 @@
 # Reproducible measurements
 
-These are local observations, not universal rankings. They measure Skein's control plane, not model quality, token use, network latency, harness startup, or end-to-end task completion. Raw samples and reproduction scripts are included so another result can refute these numbers.
+These are local observations, not universal rankings. Warm scheduler overhead, cold process dispatch and emergency stop are separate questions; their numbers must not be mixed. Raw samples and reproduction scripts are included so another result can refute these numbers.
 
-## Environment
+## Environment and statistical method
 
 Recorded on 2026-11-03 local time:
 
 - Windows 11 build 28020, AMD64; AMD Ryzen 9 5950X, 32 logical CPUs.
-- Skein 0.1.0, Go 1.27.3; binary built with `-trimpath -ldflags="-s -w"`.
+- Skein 0.1.0, Go 1.27.3; binaries built with `-trimpath -ldflags="-s -w"`.
 - Python 3.12.16; LangGraph 1.2.19 with the exact transitive versions in [requirements-langgraph.txt](bench/requirements-langgraph.txt).
-- Warm caches, no intentional concurrent workload. Candidate startup and LangGraph graph compilation are outside the measured samples. Skein validates its in-memory manifest on every sample.
+- Warm caches, no intentional concurrent workload. The stripped Windows `skein.exe` is 3,342,848 bytes (3.19 MiB).
 
-The stripped Windows `skein.exe` is **3,342,848 bytes (3.19 MiB)**. It uses only the Go standard library.
+For warm scheduler measurements, each candidate runs three batches. Candidate order rotates between batches; every batch has two warmups followed by five measured runs, producing 15 samples per candidate. Startup and LangGraph compilation are outside these samples. Skein constructs its manifest once per batch and validates it on every sample. No `tracemalloc` or other memory profiler runs inside the timed region.
 
-## Independent no-op graph: framework comparison
+The raw Go control averages ten graph executions per sample to stay above the Windows timer floor; other candidates execute one graph per sample. It is an unstructured lower bound, not another orchestrator: no manifest validation, leases, reports, audit events or stop fencing. LangGraph provides a broader graph/state feature set. Neither observation is hidden or treated as a universal ranking.
 
-Every candidate executes the same number of independent empty tasks. There are no model calls, providers, network requests, checkpoints, or workload processes. Nine measured runs follow two warmups. Values are medians of wall time; tasks/s is the median of per-run rates.
+All p95 values below use nearest rank. Go allocation counters and Python memory metrics are deliberately not used for a cross-runtime memory ranking.
 
-| Tasks | Candidate | Median | p95 | Median tasks/s |
-| ---: | --- | ---: | ---: | ---: |
-| 100 | Skein | **1.044 ms** | 1.646 ms | **95,822** |
-| 100 | Python asyncio | 1.313 ms | 1.430 ms | 76,161 |
-| 100 | LangGraph | 64.494 ms | 90.877 ms | 1,551 |
-| 1,000 | Skein | **1.558 ms** | 2.283 ms | **641,972** |
-| 1,000 | Python asyncio | 10.908 ms | 18.772 ms | 91,680 |
-| 1,000 | LangGraph | 2,461.654 ms | 2,532.309 ms | 406 |
+## Warm no-op DAGs at 1,000 nodes
 
-At 1,000 tasks, Skein's median was **7.0× lower than asyncio** and **about 1,580× lower than LangGraph** for this narrow workload. This does not imply a similar ratio for model-driven applications. LangGraph supplies a broader graph/state feature set; the benchmark deliberately isolates execution overhead rather than scoring those features.
+Every candidate executes the same graph shape with empty node functions. There are no model calls, providers, network requests, checkpoints or workload processes. Each cell is **median / p95 wall time**.
 
-Raw data: [windows-amd64-scheduler-compare.json](bench/results/windows-amd64-scheduler-compare.json).
+| Graph shape | Raw Go control | Skein | Python asyncio | LangGraph |
+| --- | ---: | ---: | ---: | ---: |
+| Independent | 0.118 / 0.180 ms | **1.580 / 2.377 ms** | 3.530 / 15.336 ms | 876.910 / 950.755 ms |
+| Serial chain | 0.246 / 0.318 ms | **3.272 / 3.621 ms** | 4.479 / 15.308 ms | 534.907 / 538.510 ms |
+| Fan-out / join | 0.138 / 0.181 ms | **2.080 / 2.409 ms** | 3.795 / 4.036 ms | 892.522 / 987.461 ms |
+
+For these specific 1,000-node samples, Skein's median was:
+
+- **2.23× lower than asyncio** and **554.9× lower than LangGraph** for independent tasks;
+- **1.37× lower than asyncio** and **163.5× lower than LangGraph** for the serial chain;
+- **1.82× lower than asyncio** and **429.0× lower than LangGraph** for fan-out / join.
+
+The raw Go control was faster than Skein by **13.45×**, **13.31×** and **15.12×**, respectively. That is the measured cost of the tested graph machinery in this environment, not a claim that the control provides equivalent behavior.
+
+Raw data: [independent](bench/results/windows-amd64-scheduler-independent.json), [chain](bench/results/windows-amd64-scheduler-chain.json), [fan-out / join](bench/results/windows-amd64-scheduler-fanout.json).
+
+## Small graphs: Skein is not always ahead
+
+At 100 nodes, asyncio had the lower median in all three recorded shapes. Each cell is **median / p95 wall time**.
+
+| Graph shape | Raw Go control | Skein | Python asyncio | LangGraph |
+| --- | ---: | ---: | ---: | ---: |
+| Independent | 0.052 / 0.054 ms | 1.040 / 1.569 ms | **0.740 / 0.789 ms** | 22.278 / 48.163 ms |
+| Serial chain | 0.052 / 0.059 ms | 1.042 / 1.544 ms | **0.855 / 1.103 ms** | 17.759 / 19.635 ms |
+| Fan-out / join | 0.052 / 0.053 ms | 1.049 / 1.297 ms | **0.788 / 0.827 ms** | 22.170 / 49.959 ms |
+
+For 100 independent tasks, asyncio's median was **1.40× lower than Skein's**. This counterexample is included on the landing page rather than selecting only favorable sizes.
 
 ## Scale within the same process
 
-Seven measured runs follow two warmups. LangGraph was not run at these sizes; no extrapolation is presented for it.
+LangGraph was not run above 1,000 nodes; no extrapolation is presented. Each cell is **median / p95 wall time**.
 
-| Tasks | Candidate | Median | p95 | Median tasks/s |
-| ---: | --- | ---: | ---: | ---: |
-| 10,000 | Skein | **12.180 ms** | 15.405 ms | **821,038** |
-| 10,000 | Python asyncio | 135.364 ms | 142.757 ms | 73,875 |
-| 100,000 | Skein | **116.676 ms** | 129.569 ms | **857,076** |
-| 100,000 | Python asyncio | 1,570.802 ms | 1,596.073 ms | 63,662 |
+| Graph shape | Nodes | Raw Go control | Skein | Python asyncio |
+| --- | ---: | ---: | ---: | ---: |
+| Independent | 10,000 | 1.295 / 1.712 ms | **11.589 / 18.045 ms** | 37.767 / 42.893 ms |
+| Independent | 100,000 | 13.000 / 15.711 ms | **114.374 / 129.138 ms** | 505.848 / 542.264 ms |
+| Serial chain | 10,000 | 2.446 / 2.562 ms | **29.975 / 32.935 ms** | 51.113 / 58.462 ms |
+| Fan-out / join | 10,000 | 1.284 / 1.538 ms | **17.019 / 18.490 ms** | 40.203 / 51.316 ms |
 
-At 100,000 independent no-op tasks, Skein's median was **13.5× lower than asyncio**. This demonstrates local scheduler throughput for the tested graph; it is not a claim that one machine can run 100,000 model calls or OS processes concurrently. Skein's worker limit remains in force, and real workloads are normally limited by providers, memory, tools, and operating-system process limits.
+At 100,000 independent no-op tasks, Skein's median was **4.42× lower than asyncio**. This demonstrates local scheduler throughput for the tested graph, not 100,000 concurrent model calls or OS processes. Real workloads are normally limited by providers, memory, tools and operating-system process limits.
 
-Raw data: [windows-amd64-scheduler-scale.json](bench/results/windows-amd64-scheduler-scale.json).
+## Cold runs with real workload processes
 
-## Emergency stop with real process trees
+Every timed run starts a fresh candidate process. Candidate startup, imports, Skein manifest validation, LangGraph graph compilation, orchestration and workload-process startup are all inside the measured interval. Each of 24 children reads the same 16 KiB payload from stdin, computes SHA-256 and returns it. The concurrency limit is eight workers.
 
-Each of 12 runs starts eight Python workloads, waits until all eight readiness files exist, invokes `skein stop`, and measures until the run process exits. The checked result must have exit code 4, status `stopped`, zero succeeded tasks, and eight stopped tasks. The interval includes the stop CLI launch, latch propagation, Windows process-tree termination, and report output.
+Candidate order rotates. There are three batches with one warmup and five measured fresh processes per candidate per batch: 15 samples and 360 verified results per candidate. Parent-side verification is outside the timed interval.
 
-| Workloads per run | Median | p95 | Max |
-| ---: | ---: | ---: | ---: |
-| 8 | **134.185 ms** | **146.292 ms** | 146.292 ms |
+| Candidate | Median | p95 | Verified results |
+| --- | ---: | ---: | ---: |
+| Skein | **156.463 ms** | 171.590 ms | 360 / 360 |
+| Python asyncio | 288.644 ms | 300.693 ms | 360 / 360 |
+| LangGraph | 998.010 ms | 1,038.735 ms | 360 / 360 |
 
-This is an end-to-end local observation, not a guaranteed distributed-system shutdown deadline. Skein can terminate tracked local process trees; it cannot forcibly stop remote work, detached processes, or side effects that already crossed an external system boundary. Epoch fencing prevents stale queued work and late completions from being accepted by this scheduler.
+Skein's cold-process median was **1.84× lower than asyncio** and **6.38× lower than LangGraph** for this workload. These ratios do not belong to the warm scheduler tables and do not measure model quality or provider latency.
+
+Raw data: [windows-amd64-process-workload.json](bench/results/windows-amd64-process-workload.json).
+
+## Emergency stop with real parent/child trees
+
+Three unrecorded warmups precede 20 measured runs. Each run starts eight Python parents and eight Python children, then waits until every parent and child is ready. The measured interval starts at the stop CLI launch and ends when the Skein run exits after terminating the tracked trees and writing its report.
+
+Every child updates an atomic heartbeat file. After the run exits, all eight heartbeats must remain unchanged for 150 ms. These checks happen after the measured interval. Every run also verifies that a duplicate stop preserves the first epoch and that reset does not reuse an old epoch.
+
+| Measured runs | Parent/child trees stopped | Child heartbeats frozen | Median | p95 | Max |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 20 | **160 / 160** | **160 / 160** | **141.663 ms** | **150.564 ms** | 163.894 ms |
+
+This is an end-to-end local observation, not a guaranteed distributed-system shutdown deadline. Skein cannot forcibly stop remote work, detached processes or side effects that already crossed an external boundary. Epoch fencing prevents stale queued work and late completions from being accepted by this scheduler.
 
 Raw data: [windows-amd64-stop.json](bench/results/windows-amd64-stop.json).
 
+## Functional and adversarial checks
+
+The recorded Go test run contains **147 passed test/subtest records**, including 15 top-level tests in two packages. It includes:
+
+- **128 deterministic random DAGs containing 6,166 tasks**, checking dependency order and worker bounds;
+- **800 concurrent stop calls across 25 rounds**, checking that the first latch remains unchanged and the epoch advances once;
+- an executor that deliberately returns success after cancellation, checking that its late result and dependent are stopped;
+- real parent/child termination with a heartbeat check.
+
+The real CLI proof additionally passes **3 / 3 scenarios**: multi-pass data flow (`start:a/1:a/2:b/1`), dependency failure isolation and cycle rejection before execution.
+
+Raw data: [Go test JSONL](bench/results/windows-amd64-tests.jsonl), [functional reports and events](bench/results/windows-amd64-functional.json).
+
 ## Reproduce
 
-See [bench/README.md](bench/README.md) for exact commands. The test suite additionally checks graph validation, looped-block data flow, dependency skipping, worker limits, stale completion rejection, epoch persistence after interrupted stops, and real child-process termination.
+See [bench/README.md](bench/README.md) for exact commands and landing-data generation. CI runs the real CLI proof and parent/child stop proof on Ubuntu, Windows and macOS; cross-compilation is not presented as runtime testing.

@@ -1,0 +1,383 @@
+{
+  "schema": 1,
+  "measured_at": "2026-11-03T00:51:07.582052+00:00",
+  "scope": "Cold end-to-end wall time for independent real subprocess tasks. Every child reads a 16 KiB payload from stdin, computes SHA-256, and returns it; every result is verified. All candidate process startup, imports, Skein manifest validation, LangGraph graph compilation, workload-process startup, orchestration and result verification inside the candidate are included. Parent-side verification is outside the timed interval.",
+  "method": "3 batches; 1 warmup per candidate per batch; 5 measured fresh processes per candidate per batch. Candidate order rotates between runs. Each run dispatches 24 children with a concurrency limit of 8. p95 uses nearest rank.",
+  "warning": "This is a small local process-dispatch workload, not a model-quality or provider-latency benchmark. Cold-start results and warm scheduler results answer different questions and must not be mixed.",
+  "machine": {
+    "platform": "Windows-11-10.0.28020-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD",
+    "logical_cpus": 32,
+    "python": "3.12.16"
+  },
+  "tasks_per_run": 24,
+  "workers": 8,
+  "payload_bytes": 16384,
+  "expected_sha256": "a1f259d4365ed4320c377ce26f5c8c56dcdc9a89e7b641bfd8eabfbbeac86654",
+  "results": [
+    {
+      "candidate": "skein",
+      "tasks": 24,
+      "workers": 8,
+      "samples": [
+        {
+          "batch": 1,
+          "run": 1,
+          "duration_ns": 171589800,
+          "tasks_per_second": 139.86845371927703,
+          "verified": 24
+        },
+        {
+          "batch": 1,
+          "run": 2,
+          "duration_ns": 156328700,
+          "tasks_per_second": 153.52267369971094,
+          "verified": 24
+        },
+        {
+          "batch": 1,
+          "run": 3,
+          "duration_ns": 156443700,
+          "tasks_per_second": 153.40982091321032,
+          "verified": 24
+        },
+        {
+          "batch": 1,
+          "run": 4,
+          "duration_ns": 155436200,
+          "tasks_per_second": 154.40418641217425,
+          "verified": 24
+        },
+        {
+          "batch": 1,
+          "run": 5,
+          "duration_ns": 155747400,
+          "tasks_per_second": 154.09567029690382,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 1,
+          "duration_ns": 156462700,
+          "tasks_per_second": 153.39119163864612,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 2,
+          "duration_ns": 155165200,
+          "tasks_per_second": 154.6738572824319,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 3,
+          "duration_ns": 152001200,
+          "tasks_per_second": 157.89349031455015,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 4,
+          "duration_ns": 152695000,
+          "tasks_per_second": 157.17606994335114,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 5,
+          "duration_ns": 165263100,
+          "tasks_per_second": 145.2229808105984,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 1,
+          "duration_ns": 164174200,
+          "tasks_per_second": 146.18618516185856,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 2,
+          "duration_ns": 165521500,
+          "tasks_per_second": 144.99626936681943,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 3,
+          "duration_ns": 162688800,
+          "tasks_per_second": 147.5209110891469,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 4,
+          "duration_ns": 157864000,
+          "tasks_per_second": 152.02959509451173,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 5,
+          "duration_ns": 160228000,
+          "tasks_per_second": 149.78655416032154,
+          "verified": 24
+        }
+      ],
+      "summary": {
+        "runs": 15,
+        "min_ms": 152.0012,
+        "median_ms": 156.4627,
+        "p95_ms": 171.5898,
+        "max_ms": 171.5898,
+        "median_tasks_per_second": 153.39119163864612,
+        "verified_tasks": 360
+      }
+    },
+    {
+      "candidate": "asyncio",
+      "tasks": 24,
+      "workers": 8,
+      "samples": [
+        {
+          "batch": 1,
+          "run": 1,
+          "duration_ns": 278587600,
+          "tasks_per_second": 86.1488451029407,
+          "verified": 24
+        },
+        {
+          "batch": 1,
+          "run": 2,
+          "duration_ns": 297340900,
+          "tasks_per_second": 80.71543470810776,
+          "verified": 24
+        },
+        {
+          "batch": 1,
+          "run": 3,
+          "duration_ns": 283285000,
+          "tasks_per_second": 84.72033464532184,
+          "verified": 24
+        },
+        {
+          "batch": 1,
+          "run": 4,
+          "duration_ns": 285879900,
+          "tasks_per_second": 83.951337607156,
+          "verified": 24
+        },
+        {
+          "batch": 1,
+          "run": 5,
+          "duration_ns": 283464100,
+          "tasks_per_second": 84.66680613171121,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 1,
+          "duration_ns": 283575100,
+          "tasks_per_second": 84.63366494448913,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 2,
+          "duration_ns": 288644200,
+          "tasks_per_second": 83.14734888142564,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 3,
+          "duration_ns": 288512000,
+          "tasks_per_second": 83.1854480922804,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 4,
+          "duration_ns": 293229800,
+          "tasks_per_second": 81.84707011361056,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 5,
+          "duration_ns": 287683300,
+          "tasks_per_second": 83.42507194543445,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 1,
+          "duration_ns": 292812300,
+          "tasks_per_second": 81.9637699645814,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 2,
+          "duration_ns": 289400900,
+          "tasks_per_second": 82.92994251227276,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 3,
+          "duration_ns": 295958700,
+          "tasks_per_second": 81.09239566196229,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 4,
+          "duration_ns": 294813000,
+          "tasks_per_second": 81.40753630267322,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 5,
+          "duration_ns": 300692800,
+          "tasks_per_second": 79.81567899198119,
+          "verified": 24
+        }
+      ],
+      "summary": {
+        "runs": 15,
+        "min_ms": 278.5876,
+        "median_ms": 288.6442,
+        "p95_ms": 300.6928,
+        "max_ms": 300.6928,
+        "median_tasks_per_second": 83.14734888142564,
+        "verified_tasks": 360
+      }
+    },
+    {
+      "candidate": "langgraph",
+      "tasks": 24,
+      "workers": 8,
+      "samples": [
+        {
+          "batch": 1,
+          "run": 1,
+          "duration_ns": 996066300,
+          "tasks_per_second": 24.09478164254729,
+          "verified": 24
+        },
+        {
+          "batch": 1,
+          "run": 2,
+          "duration_ns": 982324500,
+          "tasks_per_second": 24.43184507767036,
+          "verified": 24
+        },
+        {
+          "batch": 1,
+          "run": 3,
+          "duration_ns": 991818100,
+          "tasks_per_second": 24.19798549754234,
+          "verified": 24
+        },
+        {
+          "batch": 1,
+          "run": 4,
+          "duration_ns": 976019800,
+          "tasks_per_second": 24.58966508671238,
+          "verified": 24
+        },
+        {
+          "batch": 1,
+          "run": 5,
+          "duration_ns": 991264200,
+          "tasks_per_second": 24.211506881818185,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 1,
+          "duration_ns": 998010400,
+          "tasks_per_second": 24.047845593593014,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 2,
+          "duration_ns": 995301500,
+          "tasks_per_second": 24.11329632277255,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 3,
+          "duration_ns": 1004190200,
+          "tasks_per_second": 23.899854828298462,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 4,
+          "duration_ns": 997810100,
+          "tasks_per_second": 24.052672948489896,
+          "verified": 24
+        },
+        {
+          "batch": 2,
+          "run": 5,
+          "duration_ns": 1005024700,
+          "tasks_per_second": 23.88001011318428,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 1,
+          "duration_ns": 1011217600,
+          "tasks_per_second": 23.7337641275231,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 2,
+          "duration_ns": 1038734600,
+          "tasks_per_second": 23.105035684764907,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 3,
+          "duration_ns": 1022446100,
+          "tasks_per_second": 23.47312000114236,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 4,
+          "duration_ns": 1033502300,
+          "tasks_per_second": 23.222009278547322,
+          "verified": 24
+        },
+        {
+          "batch": 3,
+          "run": 5,
+          "duration_ns": 1004804300,
+          "tasks_per_second": 23.885248102540963,
+          "verified": 24
+        }
+      ],
+      "summary": {
+        "runs": 15,
+        "min_ms": 976.0198,
+        "median_ms": 998.0104,
+        "p95_ms": 1038.7346,
+        "max_ms": 1038.7346,
+        "median_tasks_per_second": 24.047845593593014,
+        "verified_tasks": 360
+      }
+    }
+  ]
+}
