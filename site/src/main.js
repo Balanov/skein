@@ -19,7 +19,7 @@ let stopped = false;
 let epoch = 1;
 let benchmarkShape = "independent";
 let benchmarkSize = 1000;
-let benchmarkScale = "log";
+let benchmarkScale = "linear";
 const candidateOrder = ["skein", "asyncio", "langgraph"];
 const mechanismSteps = ["one", "two", "three"];
 let mechanismStep = 0;
@@ -191,7 +191,7 @@ function renderBenchmark() {
     track.className = "bar-track";
     const fill = document.createElement("div");
     fill.className = "bar-fill";
-    fill.style.setProperty("--scale", Math.max(0.01, ratio).toFixed(5));
+    fill.style.setProperty("--scale", ratio.toFixed(5));
     fill.style.setProperty("--stagger", `${index * 70}ms`);
     track.append(fill);
     const value = document.createElement("strong");
@@ -200,7 +200,13 @@ function renderBenchmark() {
     row.append(name, track, value);
     return row;
   }));
-  document.querySelector("#benchmark-insight").textContent = comparisonText(results);
+  const skein = results.find((result) => result.candidate === "skein");
+  const competitor = results.find((result) => result.candidate === "langgraph") || results.find((result) => result.candidate === "asyncio");
+  if (skein && competitor) {
+    document.querySelector("#advantage-value").textContent = `${formatRatio(competitor.median_ms / skein.median_ms)}×`;
+    document.querySelector("#advantage-label").textContent = text("bench.advantage", { candidate: candidateName(competitor.candidate) });
+  }
+  document.querySelector("#benchmark-insight-text").textContent = comparisonText(results);
   const body = document.querySelector("#benchmark-table-body");
   body.replaceChildren(...results.map((result) => {
     const row = document.createElement("tr");
@@ -233,6 +239,44 @@ function setupPanels(buttonSelector, prefix, copySelector) {
     });
   });
 }
+
+const operationNames = ["run", "tests", "install", "limits"];
+let activeOperation = "run";
+
+function setOperation(name, animate = true) {
+  activeOperation = name;
+  document.querySelectorAll("[data-operation]").forEach((button) => {
+    const active = button.dataset.operation === name;
+    button.setAttribute("aria-selected", String(active));
+    button.tabIndex = active ? 0 : -1;
+  });
+  document.querySelectorAll(".operation-panel").forEach((panel) => {
+    panel.hidden = panel.id !== `operation-${name}`;
+  });
+  const panel = document.querySelector(`#operation-${name}`);
+  if (animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    panel.animate([
+      { opacity: 0, transform: "translateY(6px)" },
+      { opacity: 1, transform: "translateY(0)" },
+    ], { duration: 200, easing: "ease-out" });
+  }
+}
+
+document.querySelectorAll("[data-operation]").forEach((button) => {
+  button.addEventListener("click", () => setOperation(button.dataset.operation));
+  button.addEventListener("keydown", (event) => {
+    const current = operationNames.indexOf(activeOperation);
+    let next;
+    if (event.key === "ArrowRight") next = (current + 1) % operationNames.length;
+    if (event.key === "ArrowLeft") next = (current + operationNames.length - 1) % operationNames.length;
+    if (event.key === "Home") next = 0;
+    if (event.key === "End") next = operationNames.length - 1;
+    if (next === undefined) return;
+    event.preventDefault();
+    setOperation(operationNames[next]);
+    document.querySelector(`[data-operation="${operationNames[next]}"]`).focus();
+  });
+});
 
 async function copyText(button, value) {
   let copied = false;

@@ -10,7 +10,7 @@
 </head>
 <body>
   <header class="site-header wrap" id="top">
-    <a class="brand" href="#top" aria-label="Skein home"><img src="./assets/logo.svg" alt="" width="34" height="34"><span>SKEIN</span></a>
+    <a class="brand" href="#top" aria-label="Skein by Paritet"><img src="./assets/logo.svg" alt="" width="34" height="34"><span>SKEIN</span><span class="brand-parent"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="3.2"/><circle cx="24" cy="8" r="3.2" fill="currentColor"/><circle cx="24" cy="24" r="5.4" fill="var(--accent)"/></svg><span>by ПАРИТЕТ</span></span></a>
     <nav class="nav" aria-label="Main navigation">
       <a href="#benchmarks" data-i18n="nav.benchmarks">Measurements</a>
       <a href="#mechanism" data-i18n="nav.mechanism">Mechanism</a>
@@ -105,10 +105,10 @@
 
       <div class="benchmark-meta">
         <div><h3 id="benchmark-title">1,000 independent no-op tasks</h3><p id="benchmark-context">Warm runs · startup excluded</p></div>
-        <button class="scale-button" id="scale-toggle" type="button"><span id="scale-state" data-i18n="bench.scale.log">Log scale</span><span class="scale-action" data-i18n="bench.scale.action">Switch scale</span></button>
+        <button class="scale-button" id="scale-toggle" type="button"><span id="scale-state" data-i18n="bench.scale.linear">Linear scale</span><span class="scale-action" data-i18n="bench.scale.action">Switch scale</span></button>
       </div>
+      <div class="benchmark-insight" id="benchmark-insight"><strong id="advantage-value">554.9×</strong><div><span id="advantage-label">Skein vs LangGraph · median time</span><p id="benchmark-insight-text"></p></div></div>
       <div class="bar-chart" id="benchmark-chart" aria-live="polite"></div>
-      <p class="benchmark-insight" id="benchmark-insight"></p>
 
       <div class="table-wrap">
         <table>
@@ -188,18 +188,33 @@ return writeEpoch(stateDir, epoch)</pre><a class="source-link" href="https://git
       </div>
     </section>
 
-    <section class="section wrap" id="proof">
+    <section class="section wrap operations-section" id="proof">
       <div class="section-head">
-        <p class="label" data-i18n="functional.label">EXECUTED / NOT A MOCK-UP</p>
-        <div><h2 data-i18n="functional.title">A real run, from manifest to output.</h2><p class="section-body" data-i18n="functional.body">Task a runs twice; task b reads its final output. The value below was produced by real Python workload processes.</p></div>
+        <p class="label" data-i18n="functional.label">EXECUTED / RECORDED</p>
+        <div><h2 data-i18n="functional.title">Run. Verify. Install.</h2><p class="section-body" data-i18n="functional.body">Real processes. Recorded output.</p></div>
       </div>
-      <div class="proof-layout">
-        <div class="terminal code-terminal">
-          <div class="terminal-top code-tabs">
-            <div class="code-tab-list"><button type="button" data-proof-target="manifest" aria-pressed="true" data-i18n="functional.manifest">Manifest</button><button type="button" data-proof-target="report" aria-pressed="false" data-i18n="functional.report">Observed output</button><button type="button" data-proof-target="events" aria-pressed="false">events.jsonl</button></div>
-            <button class="copy" id="proof-copy" type="button" data-copy-target="#proof-manifest-code" data-copy-label="quick.copy">Copy</button>
+      <div class="operations-shell" id="operations">
+        <div class="operations-tabs" role="tablist" aria-label="Execution and verification">
+          <button id="operation-tab-run" type="button" role="tab" data-operation="run" aria-selected="true" aria-controls="operation-run" tabindex="0" data-i18n="ops.run">Run</button>
+          <button id="operation-tab-tests" type="button" role="tab" data-operation="tests" aria-selected="false" aria-controls="operation-tests" tabindex="-1" data-i18n="ops.tests">Tests</button>
+          <button id="operation-tab-install" type="button" role="tab" data-operation="install" aria-selected="false" aria-controls="operation-install" tabindex="-1" data-i18n="ops.install">Install</button>
+          <button id="operation-tab-limits" type="button" role="tab" data-operation="limits" aria-selected="false" aria-controls="operation-limits" tabindex="-1" data-i18n="ops.limits">Limits</button>
+        </div>
+
+        <div class="operation-panel" id="operation-run" role="tabpanel" aria-labelledby="operation-tab-run">
+          <div class="operation-visual run-summary">
+            <p class="label" data-i18n="functional.report">Observed output</p>
+            <div class="run-flow" aria-label="Task a runs twice, then task b"><span>a ×2</span><i>→</i><span>b</span><i>→</i><strong>OK</strong></div>
+            <strong class="observed-output">start:a/1:a/2:b/1</strong>
+            <p class="operation-note">2 / 2 tasks · succeeded</p>
+            <a class="text-link" href="./results/windows-amd64-functional.json" data-i18n="tests.cliRaw">Observed report</a>
           </div>
-          <div id="proof-manifest" class="code-panel"><pre id="proof-manifest-code">{
+          <div class="terminal code-terminal operation-terminal">
+            <div class="terminal-top code-tabs">
+              <div class="code-tab-list"><button type="button" data-proof-target="manifest" aria-pressed="true" data-i18n="functional.manifest">Manifest</button><button type="button" data-proof-target="report" aria-pressed="false" data-i18n="functional.report">Observed output</button><button type="button" data-proof-target="events" aria-pressed="false">events.jsonl</button></div>
+              <button class="copy" id="proof-copy" type="button" data-copy-target="#proof-manifest-code" data-copy-label="quick.copy">Copy</button>
+            </div>
+            <div id="proof-manifest" class="code-panel"><pre id="proof-manifest-code">{
   "version": 1,
   "workers": 1,
   "blocks": {
@@ -212,7 +227,7 @@ return writeEpoch(stateDir, epoch)</pre><a class="source-link" href="https://git
      "needs": ["a"], "stdin_from": "a"}
   ]
 }</pre></div>
-          <div id="proof-report" class="code-panel" hidden><pre id="proof-report-code">observed: start:a/1:a/2:b/1
+            <div id="proof-report" class="code-panel" hidden><pre id="proof-report-code">observed: start:a/1:a/2:b/1
 expected: start:a/1:a/2:b/1
 run: succeeded · 2/2 tasks
 
@@ -220,48 +235,44 @@ failure isolation:
 bad → failed
 child → skipped
 independent → succeeded</pre></div>
-          <div id="proof-events" class="code-panel" hidden><pre id="proof-events-code"></pre></div>
+            <div id="proof-events" class="code-panel" hidden><pre id="proof-events-code"></pre></div>
+          </div>
         </div>
-        <div class="test-matrix">
-          <div class="test-row"><strong>128 DAGs / 6,166 tasks</strong><span data-i18n="tests.random">Deterministic random graphs; dependency order and worker bounds checked.</span><a href="./results/windows-amd64-tests.jsonl" data-i18n="tests.raw">Test output</a></div>
-          <div class="test-row"><strong>800 stops / 25 rounds</strong><span data-i18n="tests.storm">32 concurrent stops per round; the first stop record stays unchanged.</span><a href="https://github.com/Balanov/skein/blob/main/internal/engine/scheduler_random_test.go" data-i18n="tests.source">Test source</a></div>
-          <div class="test-row"><strong data-i18n="tests.lateTitle">Late success → stopped</strong><span data-i18n="tests.late">A task deliberately returns success after cancellation; its dependent stays stopped.</span><a href="https://github.com/Balanov/skein/blob/main/internal/engine/engine_test.go" data-i18n="tests.sourceLate">Test source</a></div>
-          <div class="test-row"><strong>3 / 3 CLI scenarios</strong><span data-i18n="tests.cli">Multi-pass data flow, dependency failure isolation and cycle rejection.</span><a href="./results/windows-amd64-functional.json" data-i18n="tests.cliRaw">Observed reports</a></div>
-        </div>
-      </div>
-    </section>
 
-    <section class="section wrap quick-grid" id="start">
-      <div>
-        <p class="label" data-i18n="quick.label">QUICK START</p>
-        <h2 data-i18n="quick.title">Install. Run. Stop.</h2>
-        <div class="specs">
-          <div class="spec"><strong data-i18n="spec.binary">6 platforms</strong><span data-i18n="spec.binaryNote">Linux · macOS · Windows, amd64 and arm64</span></div>
-          <div class="spec"><strong>JSON → argv</strong><span data-i18n="spec.stdlib">No implicit shell between manifest and workload</span></div>
-          <div class="spec"><strong>stdout ≠ events</strong><span data-i18n="spec.data">Payload files stay outside the JSONL control stream</span></div>
-          <div class="spec"><strong>exit 4</strong><span data-i18n="spec.stop">Exit code 4 means the run was stopped</span></div>
+        <div class="operation-panel" id="operation-tests" role="tabpanel" aria-labelledby="operation-tab-tests" hidden>
+          <div class="operation-visual test-summary"><p class="label" data-i18n="ops.tests">Tests</p><strong>147</strong><span data-i18n="tests.total">checks passed</span><small>15 top-level · 2 packages</small><a class="text-link" href="./results/windows-amd64-tests.jsonl" data-i18n="tests.raw">Test output</a></div>
+          <div class="test-matrix compact-tests">
+            <div class="test-row"><strong>128 DAGs / 6,166</strong><span data-i18n="tests.random">Dependency order + worker bounds.</span><a href="./results/windows-amd64-tests.jsonl" data-i18n="tests.raw">Output</a></div>
+            <div class="test-row"><strong>800 stops / 25</strong><span data-i18n="tests.storm">First stop record unchanged.</span><a href="https://github.com/Balanov/skein/blob/main/internal/engine/scheduler_random_test.go" data-i18n="tests.source">Source</a></div>
+            <div class="test-row"><strong data-i18n="tests.lateTitle">Late success → stopped</strong><span data-i18n="tests.late">Dependent stays stopped.</span><a href="https://github.com/Balanov/skein/blob/main/internal/engine/engine_test.go" data-i18n="tests.sourceLate">Source</a></div>
+            <div class="test-row"><strong>3 / 3 CLI</strong><span data-i18n="tests.cli">Data flow · failure isolation · cycle rejection.</span><a href="./results/windows-amd64-functional.json" data-i18n="tests.cliRaw">Reports</a></div>
+          </div>
         </div>
-        <div class="boundary">
-          <h3 data-i18n="boundary.title">Outside the guarantee</h3>
-          <p data-i18n="boundary.body">No sandbox for arbitrary commands. No exactly-once external side effects. No forced stop for remote or detached work. A lease is a fencing token, not a credential.</p>
-          <a class="text-link" href="https://github.com/Balanov/skein/blob/main/SECURITY.md" data-i18n="boundary.link">Read the security boundary</a>
-        </div>
-      </div>
-      <div class="terminal">
-        <div class="terminal-top"><span class="terminal-title">install / run / stop</span><button class="copy" type="button" data-copy-target="#install-code" data-copy-label="quick.copy">Copy</button></div>
-        <pre id="install-code">curl -fsSL https://raw.githubusercontent.com/Balanov/skein/main/install.sh | sh
+
+        <div class="operation-panel" id="operation-install" role="tabpanel" aria-labelledby="operation-tab-install" hidden>
+          <div class="operation-visual install-summary" id="start"><p class="label" data-i18n="quick.label">QUICK START</p><div><strong>6</strong><span data-i18n="spec.binary">platforms</span></div><p data-i18n="spec.binaryNote">Linux · macOS · Windows · amd64 · arm64</p><ul><li>JSON → argv</li><li>stdout ≠ events</li><li>exit 4 = stop</li></ul></div>
+          <div class="terminal operation-terminal">
+            <div class="terminal-top"><span class="terminal-title">install / run / stop</span><button class="copy" type="button" data-copy-target="#install-code" data-copy-label="quick.copy">Copy</button></div>
+            <pre id="install-code">curl -fsSL https://raw.githubusercontent.com/Balanov/skein/main/install.sh | sh
 skein --version
 
 skein run --state .skein manifest.json
 skein stop --state .skein --reason "manual stop"
 skein status --state .skein</pre>
-        <a class="release-link" href="https://github.com/Balanov/skein/releases/latest" data-i18n="quick.release">Latest release binaries and SHA-256</a>
+            <a class="release-link" href="https://github.com/Balanov/skein/releases/latest" data-i18n="quick.release">Latest release binaries and SHA-256</a>
+          </div>
+        </div>
+
+        <div class="operation-panel" id="operation-limits" role="tabpanel" aria-labelledby="operation-tab-limits" hidden>
+          <div class="operation-visual limit-summary"><p class="label" data-i18n="boundary.title">Outside the guarantee</p><strong>lease = epoch</strong><span data-i18n="boundary.lease">Fencing token, not a credential.</span><a class="text-link" href="https://github.com/Balanov/skein/blob/main/SECURITY.md" data-i18n="boundary.link">Security boundary</a></div>
+          <div class="limit-list"><div><strong>01</strong><span data-i18n="boundary.sandbox">No sandbox for arbitrary commands.</span></div><div><strong>02</strong><span data-i18n="boundary.effects">No exactly-once external effects.</span></div><div><strong>03</strong><span data-i18n="boundary.remote">No forced stop for remote or detached work.</span></div></div>
+        </div>
       </div>
     </section>
   </main>
 
   <footer class="site-footer wrap">
-    <a href="https://paritet.dev/" data-i18n="footer.paritet">A Paritet open-source project</a>
+    <a class="paritet-parent" href="https://paritet.dev/"><span>by</span><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="3.2"/><circle cx="24" cy="8" r="3.2" fill="currentColor"/><circle cx="24" cy="24" r="5.4" fill="var(--accent)"/></svg><strong>Паритет</strong></a>
     <div class="footer-links"><a href="https://github.com/Balanov/skein" data-i18n="footer.repo">Repository</a><a href="https://github.com/Balanov/skein/blob/main/BENCHMARKS.md" data-i18n="footer.bench">Benchmark methodology</a><a href="https://github.com/Balanov/skein/blob/main/LICENSE" data-i18n="footer.license">MIT license</a></div>
   </footer>
   <script type="module" src="./src/main.js"></script>
