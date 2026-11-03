@@ -19,7 +19,7 @@ let stopped = false;
 let epoch = 1;
 let benchmarkShape = "independent";
 let benchmarkSize = 1000;
-let benchmarkScale = "linear";
+let benchmarkScale = "trimmed";
 const candidateOrder = ["skein", "asyncio", "langgraph"];
 const mechanismSteps = ["one", "two", "three"];
 let mechanismStep = 0;
@@ -175,15 +175,21 @@ function renderBenchmark() {
   const tasks = benchmarkShape === "process" ? evidence.process.tasks_per_run : benchmarkSize;
   document.querySelector("#benchmark-title").textContent = `${formatNumber(tasks, 0)} ${text(`shape.${benchmarkShape}Title`)}`;
   document.querySelector("#benchmark-context").textContent = text(benchmarkShape === "process" ? "bench.cold" : "bench.warm");
-  document.querySelector("#scale-state").textContent = text(`bench.scale.${benchmarkScale}`);
+  const min = Math.min(...results.map((result) => result.median_ms));
   const max = Math.max(...results.map((result) => result.median_ms));
+  const baseline = benchmarkScale === "trimmed" ? min * 0.95 : 0;
+  document.querySelector("#scale-state").textContent = text(`bench.scale.${benchmarkScale}`, { baseline: formatMs(baseline) });
+  const scaleNote = document.querySelector("#benchmark-scale-note");
+  scaleNote.hidden = benchmarkScale !== "trimmed";
+  scaleNote.textContent = text("bench.scale.trimmedNote", { baseline: formatMs(baseline) });
   const chart = document.querySelector("#benchmark-chart");
+  chart.classList.toggle("is-trimmed", benchmarkScale === "trimmed");
   chart.replaceChildren(...results.map((result, index) => {
     const row = document.createElement("div");
     row.className = `bar-row ${result.candidate === "skein" ? "is-skein" : ""}`;
-    const ratio = benchmarkScale === "linear"
-      ? result.median_ms / max
-      : Math.log10(result.median_ms / 0.01) / Math.log10(max / 0.01);
+    const ratio = benchmarkScale === "log"
+      ? Math.log10(result.median_ms / 0.01) / Math.log10(max / 0.01)
+      : (result.median_ms - baseline) / (max - baseline);
     const name = document.createElement("span");
     name.className = "bar-name";
     name.textContent = candidateName(result.candidate);
@@ -327,7 +333,8 @@ document.querySelectorAll("[data-shape]").forEach((button) => button.addEventLis
 }));
 
 document.querySelector("#scale-toggle").addEventListener("click", () => {
-  benchmarkScale = benchmarkScale === "log" ? "linear" : "log";
+  const scales = ["trimmed", "linear", "log"];
+  benchmarkScale = scales[(scales.indexOf(benchmarkScale) + 1) % scales.length];
   renderBenchmark();
 });
 

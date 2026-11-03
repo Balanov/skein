@@ -10,7 +10,7 @@
 </head>
 <body>
   <header class="site-header wrap" id="top">
-    <a class="brand" href="#top" aria-label="Skein by Paritet"><img src="./assets/logo.svg" alt="" width="34" height="34"><span>SKEIN</span><span class="brand-parent"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="3.2"/><circle cx="24" cy="8" r="3.2" fill="currentColor"/><circle cx="24" cy="24" r="5.4" fill="var(--accent)"/></svg><span>by ПАРИТЕТ</span></span></a>
+    <a class="brand" href="#top" aria-label="Skein by Paritet"><img src="./assets/logo.svg" alt="" width="34" height="34"><span>SKEIN</span><span class="brand-parent"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="3.2"/><circle cx="24" cy="8" r="3.2" fill="currentColor"/><circle cx="24" cy="24" r="5.4" fill="var(--accent)"/></svg><span data-i18n="brand.parent">by PARITET</span></span></a>
     <nav class="nav" aria-label="Main navigation">
       <a href="#benchmarks" data-i18n="nav.benchmarks">Measurements</a>
       <a href="#mechanism" data-i18n="nav.mechanism">Mechanism</a>
@@ -77,16 +77,6 @@
       </div>
     </section>
 
-    <section class="proof-strip" aria-label="Recorded evidence">
-      <div class="wrap proof-grid">
-        <div class="proof-item"><span class="label" data-i18n="proof.label">RECORDED / REPRODUCIBLE</span></div>
-        <div class="proof-item"><strong class="proof-value">15</strong><span class="proof-label" data-i18n="proof.runs">measured runs per candidate</span></div>
-        <div class="proof-item"><strong class="proof-value">160 / 160</strong><span class="proof-label" data-i18n="proof.trees">child processes confirmed stopped</span></div>
-        <div class="proof-item"><strong class="proof-value">6,166</strong><span class="proof-label" data-i18n="proof.dags">tasks across 128 deterministic random DAGs</span></div>
-      </div>
-      <p class="wrap proof-scope" data-i18n="proof.scope">Windows 11 · Ryzen 9 5950X · raw samples below · no model calls</p>
-    </section>
-
     <section class="section wrap" id="benchmarks">
       <div class="section-head">
         <p class="label" data-i18n="bench.label">WALL TIME / RAW SAMPLES</p>
@@ -105,10 +95,11 @@
 
       <div class="benchmark-meta">
         <div><h3 id="benchmark-title">1,000 independent no-op tasks</h3><p id="benchmark-context">Warm runs · startup excluded</p></div>
-        <button class="scale-button" id="scale-toggle" type="button"><span id="scale-state" data-i18n="bench.scale.linear">Linear scale</span><span class="scale-action" data-i18n="bench.scale.action">Switch scale</span></button>
+        <button class="scale-button" id="scale-toggle" type="button"><span id="scale-state">Trimmed scale</span><span class="scale-action" data-i18n="bench.scale.action">Switch scale</span></button>
       </div>
       <div class="benchmark-insight" id="benchmark-insight"><strong id="advantage-value">554.9×</strong><div><span id="advantage-label">Skein vs LangGraph · median time</span><p id="benchmark-insight-text"></p></div></div>
-      <div class="bar-chart" id="benchmark-chart" aria-live="polite"></div>
+      <p class="scale-note" id="benchmark-scale-note"></p>
+      <div class="bar-chart is-trimmed" id="benchmark-chart" aria-live="polite"></div>
 
       <div class="table-wrap">
         <table>
@@ -268,11 +259,24 @@ skein status --state .skein</pre>
           <div class="limit-list"><div><strong>01</strong><span data-i18n="boundary.sandbox">No sandbox for arbitrary commands.</span></div><div><strong>02</strong><span data-i18n="boundary.effects">No exactly-once external effects.</span></div><div><strong>03</strong><span data-i18n="boundary.remote">No forced stop for remote or detached work.</span></div></div>
         </div>
       </div>
+      <details class="citation">
+        <summary><span data-i18n="citation.title">Citation — BibTeX</span><span aria-hidden="true">+</span></summary>
+        <div class="citation-body">
+          <pre id="citation-bibtex">@misc{balanov2026skein,
+  title        = {Skein: Execution with a Stop Boundary for Agent Task Graphs},
+  author       = {Balanov, Anton},
+  year         = {2026},
+  howpublished = {\url{https://github.com/Balanov/skein}},
+  url          = {https://paritet.dev/skein/}
+}</pre>
+          <button class="button button-secondary" type="button" data-copy-target="#citation-bibtex" data-copy-label="quick.copy">Copy</button>
+        </div>
+      </details>
     </section>
   </main>
 
   <footer class="site-footer wrap">
-    <a class="paritet-parent" href="https://paritet.dev/"><span>by</span><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="3.2"/><circle cx="24" cy="8" r="3.2" fill="currentColor"/><circle cx="24" cy="24" r="5.4" fill="var(--accent)"/></svg><strong>Паритет</strong></a>
+    <a class="paritet-parent" href="https://paritet.dev/"><span>by</span><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="3.2"/><circle cx="24" cy="8" r="3.2" fill="currentColor"/><circle cx="24" cy="24" r="5.4" fill="var(--accent)"/></svg><strong data-i18n="footer.parent">Paritet</strong></a>
     <div class="footer-links"><a href="https://github.com/Balanov/skein" data-i18n="footer.repo">Repository</a><a href="https://github.com/Balanov/skein/blob/main/BENCHMARKS.md" data-i18n="footer.bench">Benchmark methodology</a><a href="https://github.com/Balanov/skein/blob/main/LICENSE" data-i18n="footer.license">MIT license</a></div>
   </footer>
   <script type="module" src="./src/main.js"></script>
