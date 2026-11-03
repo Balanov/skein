@@ -39,7 +39,7 @@ def main():
                 "candidate_version": result["raw"].get("candidate_version") or result["raw"].get("go_version"),
                 "inner_repetitions": result["raw"].get("inner_repetitions", 1),
                 **result["summary"],
-            } for result in document["results"]],
+            } for result in document["results"] if result["raw"]["candidate"] != "go-goroutines"],
         }
     process = documents["process"]
     stop = documents["stop"]

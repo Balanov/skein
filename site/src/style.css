@@ -102,7 +102,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .bar-row { display: grid; grid-template-columns: minmax(150px, 190px) minmax(0, 1fr) 110px; align-items: center; gap: 16px; min-height: 36px; }
 .bar-name { overflow: hidden; font: 12px var(--mono); text-overflow: ellipsis; white-space: nowrap; }
 .bar-track { height: 16px; background: var(--paper-deep); overflow: hidden; }
-.bar-fill { width: 100%; height: 100%; background: var(--muted); transform: scaleX(var(--scale)); transform-origin: left; transition: transform 220ms ease-out; }
+.bar-fill { width: 100%; height: 100%; background: var(--muted); transform: scaleX(var(--scale)); transform-origin: left; transition: transform 240ms ease-out; transition-delay: var(--stagger, 0ms); }
 .is-skein .bar-fill { background: var(--accent); }
 .bar-value { text-align: right; font: 500 13px var(--mono); font-variant-numeric: tabular-nums; }
 .benchmark-insight { max-width: 900px; min-height: 56px; margin-bottom: 28px; font-size: 16px; color: var(--muted); }
@@ -148,13 +148,15 @@ tr.is-skein td { font-weight: 500; }
 .source-link:hover, .release-link:hover { color: var(--paper); }
 .proof-layout { display: grid; grid-template-columns: 1.08fr .92fr; gap: 48px; align-items: start; }
 .test-matrix { border-top: 1px solid var(--ink); }
-.test-row { padding-block: 20px; border-bottom: 1px solid var(--line); }
+.test-row { padding-block: 20px; border-bottom: 1px solid var(--line); transition: transform 180ms ease-out, background 180ms ease-out; }
+.test-row:hover { transform: translateX(6px); }
+.spec { padding-top: 14px; border-top: 1px solid var(--line); transition: transform 180ms ease-out; }
+.spec:hover { transform: translateY(-3px); }
 .test-row strong { display: block; font: 500 18px var(--mono); }
 .test-row span { display: block; margin-top: 8px; font-size: 14px; color: var(--muted); }
 .test-row a { display: inline-flex; align-items: center; min-height: 36px; margin-top: 8px; color: var(--accent-dark); font-size: 13px; border-bottom: 1px solid currentColor; }
 .quick-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 48px; }
 .specs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px 32px; margin-top: 32px; }
-.spec { padding-top: 14px; border-top: 1px solid var(--line); }
 .spec strong { display: block; font: 500 16px var(--mono); }
 .spec span { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); }
 .boundary { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--ink); }

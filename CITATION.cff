@@ -3,7 +3,7 @@ message: If you use Skein, please cite it as below.
 title: "Skein: Fail-Closed Swarm Orchestration"
 authors:
   - family-names: Balanov
-version: 0.1.0
+version: 0.2.0
 date-released: 2026-11-03
 url: https://paritet.dev/skein
 repository-code: https://github.com/Balanov/skein

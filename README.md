@@ -2,119 +2,68 @@
 
 **Fail-closed orchestration for local agent swarms.**
 
-Skein executes explicit task graphs with bounded concurrency, reusable multi-pass blocks, and a persistent **epoch fence**. An emergency stop invalidates queued work and rejects late completions from the old epoch instead of merely labeling a task canceled.
+Skein executes explicit task graphs with bounded concurrency and a persistent **epoch fence**. An emergency stop invalidates queued work and rejects late completions from the old epoch instead of merely labeling a task canceled.
 
-Skein is an independent open-source project by [Paritet](https://paritet.dev/). It is an execution control plane, not an agent framework or a model runtime. Version 0.1.0 is an early release: exercise the stop proof against your own workloads before relying on it operationally.
+Independent open-source project by [Paritet](https://paritet.dev/). Skein is an execution control plane, not an agent framework or a model runtime. Version 0.2.0 is an early release: exercise the stop proof against your own workloads before relying on it operationally.
 
-[Architecture](docs/ARCHITECTURE.md) · [Security boundary](SECURITY.md) · [Benchmarks](BENCHMARKS.md) · [Stop proof](bench/README.md) · [Landing source](site/)
+[Architecture](docs/ARCHITECTURE.md) · [Security boundary](SECURITY.md) · [Integration](docs/INTEGRATION.md) · [Benchmarks](BENCHMARKS.md) · [Landing source](site/)
 
-## Why Skein
+## Install
 
-A successful process exit does not prove that its result is still safe to accept. Between cancellation and a worker's final exit, stale output can otherwise release dependent actions.
-
-Skein gives every pass a lease with a run ID, epoch, unique sequence, task ID, and pass number. `skein stop` advances a persistent epoch and leaves an idempotent `STOP` latch. The scheduler then cancels execution and terminates tracked local process trees. A late result from an earlier epoch cannot be accepted or unlock dependents. `skein reset` clears the latch after inspection without reusing an old epoch.
-
-- **A concrete stop boundary:** epoch fencing, queued-work invalidation, late-completion rejection, and local process-tree termination.
-- **Explicit execution:** JSON manifests, dependency graphs, argv arrays without an implicit shell, bounded workers, tasks, passes, and per-pass timeouts.
-- **Reusable looped blocks:** define a block once; feed each pass's stdout into the next pass's stdin.
-- **Separate control and payload paths:** small JSONL events stay apart from large stdin/stdout/stderr files.
-- **Portable core:** Go standard library only; no daemon, database, provider key, or runtime dependency in the orchestrator.
-
-## Build and run
-
-Go 1.26 or newer is required to build from source.
+Linux and macOS:
 
 ```sh
-git clone https://github.com/Balanov/skein
-cd skein
+curl -fsSL https://raw.githubusercontent.com/Balanov/skein/main/install.sh | sh
+```
+
+Windows PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/Balanov/skein/main/install.ps1 | iex
+```
+
+Both scripts pick the binary for the current OS and architecture (Linux, macOS, Windows × amd64, arm64), verify it against `SHA256SUMS` and install into a user directory. Set `SKEIN_INSTALL_DIR` to override. Alternatively, download binaries from [releases](https://github.com/Balanov/skein/releases/latest) or build from source with Go 1.26+:
+
+```sh
 go build -trimpath -o bin/skein ./cmd/skein
-./bin/skein --version
 ```
 
-On Windows, use `./bin/skein.exe`. For a smaller release binary, add `-ldflags="-s -w"`. Prebuilt binaries and checksums are attached to tagged releases.
+The binary is static, needs no daemon, database or runtime dependencies.
 
-Run the included three-task example. Python is used only by this example workload, not by Skein itself:
+## Run
 
 ```sh
-./bin/skein run --state .skein --workers 2 --include-tasks examples/fanout.json
+skein run --state .skein --workers 2 --include-tasks examples/fanout.json
+skein stop --state .skein --reason "manual emergency stop"
+skein status --state .skein   # {"stopped":true,"epoch":2}
+skein reset --state .skein    # inspect first; epoch is never reused
 ```
 
-The command prints a JSON report. Run artifacts are stored under `.skein/runs/<run-id>/`: `report.json`, optional `events.jsonl`, `leases/`, and `data/`. Add `--sync` to sync each audit event to disk, or `--no-events` to disable the event stream. By default, detailed per-task results are omitted from the report; `--include-tasks` retains them.
+A run stores `report.json`, `events.jsonl`, leases and payload data under `.skein/runs/<run-id>/`. Exit codes: `0` success, `3` a task failed, `4` the run was stopped, `1` operational error, `2` usage error.
 
-### Manifest
+Manifests are JSON: argv arrays without an implicit shell, dependency graphs, reusable multi-pass blocks, worker and pass limits, per-pass timeouts. See [docs/INTEGRATION.md](docs/INTEGRATION.md) for the full contract and the Go embedding API (`import skein "github.com/Balanov/skein"`, runnable example in `examples/embed-go/`).
 
-```json
-{
-  "version": 1,
-  "workers": 2,
-  "limits": {"max_tasks": 8, "max_passes": 3},
-  "blocks": {
-    "audit": {
-      "argv": ["python", "-c", "import sys; data=sys.stdin.read(); print(data.upper(), end='')"],
-      "passes": 1,
-      "timeout_ms": 5000
-    }
-  },
-  "tasks": [
-    {"id": "left", "block": "audit", "input": "left branch"},
-    {"id": "right", "block": "audit", "input": "right branch"},
-    {"id": "join", "block": "audit", "needs": ["left"], "stdin_from": "left"}
-  ]
-}
-```
+## What the stop does — and what it does not
 
-A task can select exactly one input source: inline `input`, `input_file`, or `stdin_from` from a declared dependency. A block can also set `dir` and additional `env` entries (`KEY=value`). Task-level `passes` overrides the block default. Zero worker/pass values select runtime defaults; explicit limits are recommended for production manifests.
+**Covered:** scheduling within one local run; a persistent idempotent stop latch; epoch-fenced queued work; rejection of late completions; termination of tracked local process trees on Linux, macOS and Windows.
 
-## Emergency stop
+**Not covered:** sandboxing arbitrary commands; authentication or signed leases; semantic validation of agent output; exactly-once external side effects; automatic crash recovery; distributed consensus; remote or detached work, and side effects that already crossed an external boundary.
 
-Use the same state directory from another terminal:
-
-```sh
-./bin/skein stop --state .skein --reason "manual emergency stop"
-./bin/skein status --state .skein
-# {"stopped":true,"epoch":2}
-
-# Inspect the report and running workload state first.
-./bin/skein reset --state .skein
-./bin/skein status --state .skein
-# {"stopped":false,"epoch":2}
-```
-
-A stop uses exit code **4** for the interrupted run. Exit code **3** means at least one task failed, **1** an operational error, and **2** invalid CLI usage. A successful run returns **0**.
-
-Reset refuses to clear a live run lock. `--force` is only for a stale lock after independently verifying that no run is active. Never reset a shared state directory while another operator may still be stopping it.
-
-To reproduce a real parent-and-child process-tree stop:
-
-```sh
-python bench/stop_proof.py --skein ./bin/skein --runs 12 --tasks 8
-```
-
-## What the guarantee does—and does not—cover
-
-**Covered:** scheduling within a single local Skein run; a persistent stop latch; epoch-fenced queued work; rejection of late completions; termination of tracked local process trees on Unix and Windows.
-
-**Not covered:** sandboxing arbitrary commands; authentication or signed leases; semantic validation of agent output; exactly-once external side effects; automatic crash recovery; distributed consensus; remote work, detached processes, or side effects that already crossed an external boundary.
-
-A lease is a fencing token, not a credential. External systems do not automatically honor it; enforcement at that boundary requires a separate gateway that checks the lease. Manifest commands retain the operating-system user's permissions. Use an OS sandbox or disposable environment for untrusted workloads.
-
-See [SECURITY.md](SECURITY.md) before deployment and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the exact state transitions.
+A lease is a fencing token, not a credential — external systems honor it only through a gateway that checks it. Manifest commands keep the OS user's permissions; use an OS sandbox for untrusted workloads. See [SECURITY.md](SECURITY.md).
 
 ## Measurements
 
-Recorded on Windows 11 / Ryzen 9 5950X, each warm result is the median of 15 interleaved samples. All candidates execute the same no-op graph; Skein validates its manifest on every sample.
+Recorded on Windows 11 / Ryzen 9 5950X; each warm result is the median of 15 interleaved samples on identical graphs.
 
-| 1,000-node graph | Raw Go control | Skein | Python asyncio | LangGraph |
-| --- | ---: | ---: | ---: | ---: |
-| Independent | 0.118 ms | **1.580 ms** | 3.530 ms | 876.910 ms |
-| Serial chain | 0.246 ms | **3.272 ms** | 4.479 ms | 534.907 ms |
-| Fan-out / join | 0.138 ms | **2.080 ms** | 3.795 ms | 892.522 ms |
+| 1,000-node graph | Skein | Python asyncio | LangGraph |
+| --- | ---: | ---: | ---: |
+| Independent | **1.580 ms** | 3.530 ms | 876.910 ms |
+| Serial chain | **3.272 ms** | 4.479 ms | 534.907 ms |
+| Fan-out / join | **2.080 ms** | 3.795 ms | 892.522 ms |
 
-Skein is not ahead everywhere. At 100 independent tasks, asyncio had a lower median (**0.740 ms versus 1.040 ms**). The unstructured raw Go control was **13.31–15.12× faster** than Skein at 1,000 nodes; it omits validation, leases, reports, audit events and stop fencing.
+A separate cold-process test launched 24 real Python SHA-256 workers per run. Over 15 fresh-process runs, Skein's median was **156.463 ms** versus **288.644 ms** for asyncio and **998.010 ms** for LangGraph, with **360 / 360 results verified for every candidate**. The stop proof terminated **160 / 160 real parent/child trees** and froze **160 / 160 child heartbeats** in **141.663 ms** median over 20 runs.
 
-A separate cold-process test launched 24 real Python SHA-256 workers per run. Over 15 fresh-process runs, Skein's median was **156.463 ms**, versus **288.644 ms** for asyncio and **998.010 ms** for LangGraph, with **360 / 360 results verified for every candidate**. The stop proof terminated **160 / 160 real parent/child trees**, froze **160 / 160 child heartbeats**, and had a **141.663 ms median** over 20 runs.
-
-These are local observations, not universal rankings, model-quality results, or shutdown-deadline guarantees. Warm scheduling, cold process dispatch and emergency stop are measured separately. See [BENCHMARKS.md](BENCHMARKS.md) for p95 values, graph scaling, raw samples, counterexamples and exact reproduction commands.
+Skein is not ahead everywhere: at 100 independent tasks asyncio had a lower median (**0.740 ms versus 1.040 ms**). These are local observations, not universal rankings or model-quality results. Full methodology, p95, scaling and reproduction commands: [BENCHMARKS.md](BENCHMARKS.md).
 
 ## Checks
 
@@ -124,31 +73,8 @@ go vet ./...
 go test -race -count=1 ./... # requires CGO and a C compiler
 ```
 
-CI checks formatting, tests, vet, the Linux race detector, six cross-platform compile targets, the frontend build, and real CLI and parent/child stop proofs on Ubuntu, Windows and macOS. Cross-compilation is not presented as runtime testing.
+CI runs formatting, tests, vet, the Linux race detector, six cross-compile targets, the frontend build, and real functional plus parent/child stop proofs on six native runners (Linux, Windows, macOS × amd64, arm64). Tagged releases build each binary on its native platform and re-run both proofs per binary before publishing.
 
-## Landing page
+## License
 
-The static bilingual landing source is in `site/`; its intended public path is `https://paritet.dev/skein`. It uses Vite and self-hosted IBM Plex fonts.
-
-```sh
-cd site
-npm ci
-npm run dev -- --host 127.0.0.1 --port 7100
-npm run build # static output in site/dist/
-```
-
-The epoch-stop visualization is a browser demonstration, not a remote control for a live swarm. See [CREDITS.md](CREDITS.md) for asset licenses.
-
-## License and citation
-
-MIT © 2026 Balanov. See [LICENSE](LICENSE). Machine-readable citation metadata is in [CITATION.cff](CITATION.cff).
-
-```bibtex
-@misc{balanov2026skein,
-  title  = {Skein: Fail-Closed Swarm Orchestration},
-  author = {Balanov},
-  year   = {2026},
-  url    = {https://paritet.dev/skein},
-  note   = {MIT License}
-}
-```
+MIT © 2026 Balanov. Machine-readable citation: [CITATION.cff](CITATION.cff).

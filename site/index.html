@@ -47,7 +47,7 @@
           <path class="flow-line" d="M74 232H438"/>
           <circle class="flow-node" cx="74" cy="92" r="16"/><circle class="flow-node" cx="74" cy="162" r="16"/><circle class="flow-node" cx="74" cy="232" r="16"/>
           <rect class="flow-node" x="220" y="66" width="98" height="192" rx="2"/>
-          <text class="flow-text" x="269" y="151" text-anchor="middle" data-i18n="demo.worker">worker / pass</text>
+          <text class="flow-text" x="269" y="151" text-anchor="middle" data-i18n="demo.worker">worker</text>
           <text class="flow-text" x="269" y="171" text-anchor="middle">epoch = 1</text>
           <line class="fence" x1="374" y1="46" x2="374" y2="274"/>
           <circle class="flow-node" cx="438" cy="92" r="16"/><circle class="flow-node" cx="438" cy="162" r="16"/><circle class="flow-node" cx="438" cy="232" r="16"/>
@@ -75,7 +75,7 @@
       <div class="wrap proof-grid">
         <div class="proof-item"><span class="label" data-i18n="proof.label">RECORDED / REPRODUCIBLE</span></div>
         <div class="proof-item"><strong class="proof-value">15</strong><span class="proof-label" data-i18n="proof.runs">measured runs per candidate</span></div>
-        <div class="proof-item"><strong class="proof-value">160 / 160</strong><span class="proof-label" data-i18n="proof.trees">child heartbeats frozen after stop</span></div>
+        <div class="proof-item"><strong class="proof-value">160 / 160</strong><span class="proof-label" data-i18n="proof.trees">child processes confirmed stopped</span></div>
         <div class="proof-item"><strong class="proof-value">6,166</strong><span class="proof-label" data-i18n="proof.dags">tasks across 128 deterministic random DAGs</span></div>
       </div>
       <p class="wrap proof-scope" data-i18n="proof.scope">Windows 11 · Ryzen 9 5950X · raw samples below · no model calls</p>
@@ -113,30 +113,30 @@
       <details class="method">
         <summary data-i18n="bench.method">Method, limitations and raw data</summary>
         <p id="benchmark-method"></p>
-        <p class="method-warning" id="benchmark-warning" data-i18n="bench.warning">Raw Go is a lower-bound control without validation, fencing, reports or audit events. LangGraph provides a broader graph/state feature set. These measurements do not rank model-driven applications.</p>
+        <p class="method-warning" id="benchmark-warning" data-i18n="bench.warning">LangGraph provides a broader graph/state feature set. These measurements rank this local orchestration scenario, not model-driven applications.</p>
         <div class="evidence-links"><a class="text-link" id="raw-result-link" href="./results/windows-amd64-scheduler-independent.json" data-i18n="bench.raw">Open raw samples</a><a class="text-link" href="https://github.com/Balanov/skein/blob/main/bench/README.md" data-i18n="bench.commands">Reproduction commands</a></div>
       </details>
 
       <div class="stop-evidence">
         <div><p class="label" data-i18n="stop.label">STOP / END TO END</p><h3 data-i18n="stop.title">Twenty runs. Every child checked.</h3><p data-i18n="stop.body">Each run starts eight parents and eight children. The measured interval ends when the run exits; heartbeat verification happens afterward.</p><a class="text-link" href="./results/windows-amd64-stop.json" data-i18n="stop.raw">Stop samples and checks</a></div>
-        <dl class="stop-stats"><div><dt data-i18n="bench.median">Median</dt><dd id="stop-median">141.663 ms</dd></div><div><dt>p95</dt><dd id="stop-p95">150.564 ms</dd></div><div><dt>max</dt><dd id="stop-max">163.894 ms</dd></div><div><dt data-i18n="stop.verified">verified children</dt><dd id="stop-verified">160 / 160</dd></div></dl>
+        <dl class="stop-stats"><div><dt data-i18n="bench.median">Median</dt><dd id="stop-median">141.663 ms</dd></div><div><dt>p95</dt><dd id="stop-p95">150.564 ms</dd></div><div><dt>max</dt><dd id="stop-max">163.894 ms</dd></div><div><dt data-i18n="stop.verified">confirmed stopped</dt><dd id="stop-verified">160 / 160</dd></div></dl>
       </div>
     </section>
 
     <section class="section wrap" id="mechanism">
       <div class="section-head">
         <p class="label" data-i18n="mechanism.label">THE ACCEPTANCE PATH</p>
-        <div><h2 data-i18n="mechanism.title">The stop is enforced where results are accepted.</h2><p class="section-body" data-i18n="mechanism.body">Cancellation asks work to end. The acceptance check decides whether its output may still change the run. Skein checks both the stop state and the result’s epoch before releasing dependents.</p></div>
+        <div><h2 data-i18n="mechanism.title">The stop is enforced where results are accepted.</h2><p class="section-body" data-i18n="mechanism.body">A stop command ends the processes, but the decisive check happens at acceptance: is this result still allowed to count. Skein checks the stop flag and the result's epoch before releasing dependents.</p></div>
       </div>
       <div class="mechanism-layout">
         <div class="mechanism-steps">
-          <div><span class="step-token">01 / STOP</span><h3 data-i18n="mechanism.one">Persist the stop before waiting for workers.</h3><p data-i18n="mechanism.oneBody">The first stop wins. Concurrent and repeated stops do not advance the epoch again.</p></div>
-          <div><span class="step-token">02 / FENCE</span><h3 data-i18n="mechanism.two">Reject old work at the acceptance boundary.</h3><p data-i18n="mechanism.twoBody">A worker can return after cancellation. Its old-epoch output still cannot release a dependent task.</p></div>
-          <div><span class="step-token">03 / EXIT</span><h3 data-i18n="mechanism.three">Terminate the tracked process tree.</h3><p data-i18n="mechanism.threeBody">Windows uses tree termination; Unix uses process groups. Detached and remote work remain outside this guarantee.</p></div>
+          <div><span class="step-token">01 / STOP</span><h3 data-i18n="mechanism.one">Persist the stop first.</h3><p data-i18n="mechanism.oneBody">The first stop wins. Repeated stops do not advance the epoch again.</p></div>
+          <div><span class="step-token">02 / FENCE</span><h3 data-i18n="mechanism.two">Reject stale work at acceptance.</h3><p data-i18n="mechanism.twoBody">A task can finish after the stop. Its old-epoch result still cannot release dependents.</p></div>
+          <div><span class="step-token">03 / EXIT</span><h3 data-i18n="mechanism.three">Terminate the tracked process tree.</h3><p data-i18n="mechanism.threeBody">Windows uses tree termination; Linux and macOS use process groups. Detached and remote work remain outside this guarantee.</p></div>
         </div>
         <div class="terminal code-terminal">
           <div class="terminal-top code-tabs">
-            <div class="code-tab-list"><button type="button" data-mechanism-target="accept" aria-pressed="true">engine.go</button><button type="button" data-mechanism-target="stop" aria-pressed="false">stop.go</button><button type="button" data-mechanism-target="process" aria-pressed="false">process.go</button></div>
+            <div class="code-tab-list"><button type="button" data-mechanism-target="accept" aria-pressed="true">engine.go</button><button type="button" data-mechanism-target="stop" aria-pressed="false">stop.go</button></div>
             <button class="copy" id="mechanism-copy" type="button" data-copy-target="#code-accept" data-copy-label="quick.copy">Copy</button>
           </div>
           <div id="mechanism-accept" class="code-panel"><pre id="code-accept">if scheduler.stopped.Load() ||
@@ -168,17 +168,6 @@ record := StopRecord{
 }
 // Encode + fsync + rename, then persist the epoch.
 return writeEpoch(stateDir, epoch)</pre><a class="source-link" href="https://github.com/Balanov/skein/blob/main/internal/engine/stop.go" data-i18n="mechanism.excerptStop">Excerpt · internal/engine/stop.go</a></div>
-          <div id="mechanism-process" class="code-panel" hidden><pre id="code-process">command := exec.CommandContext(ctx,
-    block.Argv[0], block.Argv[1:]...)
-command.Env = append(command.Env,
-    "SKEIN_RUN_ID="+lease.RunID,
-    "SKEIN_EPOCH="+strconv.FormatUint(lease.Epoch, 10),
-    "SKEIN_FENCE="+strconv.FormatUint(lease.Sequence, 10),
-)
-configureProcess(command)
-command.Cancel = func() error {
-    return killProcessTree(command)
-}</pre><a class="source-link" href="https://github.com/Balanov/skein/blob/main/internal/engine/process.go" data-i18n="mechanism.excerptProcess">Excerpt · internal/engine/process.go</a></div>
         </div>
       </div>
     </section>
@@ -186,7 +175,7 @@ command.Cancel = func() error {
     <section class="section wrap" id="proof">
       <div class="section-head">
         <p class="label" data-i18n="functional.label">EXECUTED / NOT A MOCK-UP</p>
-        <div><h2 data-i18n="functional.title">A real CLI run, down to the output.</h2><p class="section-body" data-i18n="functional.body">Two tasks share one block. Task a runs twice; task b reads its final output. The observed value is produced by actual Python workload processes.</p></div>
+        <div><h2 data-i18n="functional.title">A real run, from manifest to output.</h2><p class="section-body" data-i18n="functional.body">Task a runs twice; task b reads its final output. The value below was produced by real Python workload processes.</p></div>
       </div>
       <div class="proof-layout">
         <div class="terminal code-terminal">
@@ -219,8 +208,8 @@ independent → succeeded</pre></div>
         </div>
         <div class="test-matrix">
           <div class="test-row"><strong>128 DAGs / 6,166 tasks</strong><span data-i18n="tests.random">Deterministic random graphs; dependency order and worker bounds checked.</span><a href="./results/windows-amd64-tests.jsonl" data-i18n="tests.raw">Test output</a></div>
-          <div class="test-row"><strong>800 stops / 25 rounds</strong><span data-i18n="tests.storm">Thirty-two concurrent callers per round; the first latch stays unchanged.</span><a href="https://github.com/Balanov/skein/blob/main/internal/engine/scheduler_random_test.go" data-i18n="tests.source">Test source</a></div>
-          <div class="test-row"><strong data-i18n="tests.lateTitle">Late success → stopped</strong><span data-i18n="tests.late">An executor deliberately returns success after cancellation; its dependent remains stopped.</span><a href="https://github.com/Balanov/skein/blob/main/internal/engine/engine_test.go" data-i18n="tests.sourceLate">Test source</a></div>
+          <div class="test-row"><strong>800 stops / 25 rounds</strong><span data-i18n="tests.storm">32 concurrent stops per round; the first stop record stays unchanged.</span><a href="https://github.com/Balanov/skein/blob/main/internal/engine/scheduler_random_test.go" data-i18n="tests.source">Test source</a></div>
+          <div class="test-row"><strong data-i18n="tests.lateTitle">Late success → stopped</strong><span data-i18n="tests.late">A task deliberately returns success after cancellation; its dependent stays stopped.</span><a href="https://github.com/Balanov/skein/blob/main/internal/engine/engine_test.go" data-i18n="tests.sourceLate">Test source</a></div>
           <div class="test-row"><strong>3 / 3 CLI scenarios</strong><span data-i18n="tests.cli">Multi-pass data flow, dependency failure isolation and cycle rejection.</span><a href="./results/windows-amd64-functional.json" data-i18n="tests.cliRaw">Observed reports</a></div>
         </div>
       </div>
@@ -228,13 +217,13 @@ independent → succeeded</pre></div>
 
     <section class="section wrap quick-grid" id="start">
       <div>
-        <p class="label" data-i18n="quick.label">RUN IT LOCALLY</p>
-        <h2 data-i18n="quick.title">Build. Run. Stop.</h2>
+        <p class="label" data-i18n="quick.label">QUICK START</p>
+        <h2 data-i18n="quick.title">Install. Run. Stop.</h2>
         <div class="specs">
-          <div class="spec"><strong>3.19 MiB</strong><span data-i18n="spec.binary">Windows binary; Go standard library only</span></div>
+          <div class="spec"><strong data-i18n="spec.binary">6 platforms</strong><span data-i18n="spec.binaryNote">Linux · macOS · Windows, amd64 and arm64</span></div>
           <div class="spec"><strong>JSON → argv</strong><span data-i18n="spec.stdlib">No implicit shell between manifest and workload</span></div>
           <div class="spec"><strong>stdout ≠ events</strong><span data-i18n="spec.data">Payload files stay outside the JSONL control stream</span></div>
-          <div class="spec"><strong>exit 4</strong><span data-i18n="spec.stop">The run was interrupted by a stop</span></div>
+          <div class="spec"><strong>exit 4</strong><span data-i18n="spec.stop">Exit code 4 means the run was stopped</span></div>
         </div>
         <div class="boundary">
           <h3 data-i18n="boundary.title">Outside the guarantee</h3>
@@ -243,15 +232,14 @@ independent → succeeded</pre></div>
         </div>
       </div>
       <div class="terminal">
-        <div class="terminal-top"><span class="terminal-title">build / run / stop</span><button class="copy" type="button" data-copy-target="#install-code" data-copy-label="quick.copy">Copy</button></div>
-        <pre id="install-code">git clone https://github.com/Balanov/skein
-cd skein
-go build -o bin/skein ./cmd/skein
+        <div class="terminal-top"><span class="terminal-title">install / run / stop</span><button class="copy" type="button" data-copy-target="#install-code" data-copy-label="quick.copy">Copy</button></div>
+        <pre id="install-code">curl -fsSL https://raw.githubusercontent.com/Balanov/skein/main/install.sh | sh
+skein --version
 
-./bin/skein run --state .skein examples/fanout.json
-./bin/skein stop --state .skein --reason "manual stop"
-./bin/skein status --state .skein</pre>
-        <a class="release-link" href="https://github.com/Balanov/skein/releases/tag/v0.1.0" data-i18n="quick.release">Binaries and SHA-256 for v0.1.0</a>
+skein run --state .skein manifest.json
+skein stop --state .skein --reason "manual stop"
+skein status --state .skein</pre>
+        <a class="release-link" href="https://github.com/Balanov/skein/releases/latest" data-i18n="quick.release">Latest release binaries and SHA-256</a>
       </div>
     </section>
   </main>

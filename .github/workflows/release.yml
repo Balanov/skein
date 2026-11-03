@@ -1,0 +1,80 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { runner: ubuntu-latest, goos: linux, goarch: amd64 }
+          - { runner: ubuntu-24.04-arm, goos: linux, goarch: arm64 }
+          - { runner: windows-latest, goos: windows, goarch: amd64 }
+          - { runner: windows-11-arm, goos: windows, goarch: arm64 }
+          - { runner: macos-15-intel, goos: darwin, goarch: amd64 }
+          - { runner: macos-latest, goos: darwin, goarch: arm64 }
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26.x"
+          cache: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build ${{ matrix.goos }}/${{ matrix.goarch }}
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          case "${{ matrix.goos }}" in
+            windows) asset="skein_${version}_${{ matrix.goos }}_${{ matrix.goarch }}.exe" ;;
+            *) asset="skein_${version}_${{ matrix.goos }}_${{ matrix.goarch }}" ;;
+          esac
+          CGO_ENABLED=0 GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} \
+            go build -trimpath -ldflags="-s -w" -o "$asset" ./cmd/skein
+          echo "ASSET=$asset" >> "$GITHUB_ENV"
+      - name: Functional CLI proof
+        shell: bash
+        run: |
+          chmod +x "./$ASSET" 2>/dev/null || true
+          python bench/functional_proof.py --skein "./$ASSET" --output "ci-functional-${{ matrix.goos }}-${{ matrix.goarch }}.json"
+      - name: Parent/child stop proof
+        shell: bash
+        run: python bench/stop_proof.py --skein "./$ASSET" --runs 2 --warmups 1 --tasks 4 --output "ci-stop-${{ matrix.goos }}-${{ matrix.goarch }}.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: asset-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: ${{ env.ASSET }}
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: proofs-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: ci-*.json
+          if-no-files-found: ignore
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: asset-*
+          path: assets
+          merge-multiple: true
+      - name: SHA256SUMS
+        working-directory: assets
+        run: sha256sum * > ../SHA256SUMS
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            assets/*
+            SHA256SUMS
+          generate_release_notes: true

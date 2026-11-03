@@ -20,7 +20,7 @@ let epoch = 1;
 let benchmarkShape = "independent";
 let benchmarkSize = 1000;
 let benchmarkScale = "log";
-const candidateOrder = ["go-goroutines", "skein", "asyncio", "langgraph"];
+const candidateOrder = ["skein", "asyncio", "langgraph"];
 
 function text(key, replacements = {}) {
   let value = messages[language][key] ?? key;
@@ -72,8 +72,7 @@ function updateDemo() {
 }
 
 function candidateName(candidate) {
-  if (candidate === "go-goroutines") return "Go goroutines · control";
-  if (candidate === "skein") return "Skein 0.1.0";
+  if (candidate === "skein") return "Skein";
   if (candidate === "asyncio") return "Python asyncio 3.12.16";
   return "LangGraph 1.2.19";
 }
@@ -125,7 +124,6 @@ function comparisonText(results) {
   if (values.asyncio >= values.skein) parts.push(text("bench.asyncLower", { ratio: formatRatio(values.asyncio / values.skein) }));
   else parts.push(text("bench.asyncFaster", { ratio: formatRatio(values.skein / values.asyncio) }));
   if (values.langgraph) parts.push(text("bench.langLower", { ratio: formatRatio(values.langgraph / values.skein) }));
-  parts.push(text("bench.rawGo", { ratio: formatRatio(values.skein / values["go-goroutines"]) }));
   if (!values.langgraph) parts.push(text("bench.noLanggraph"));
   return parts.join(" ");
 }
@@ -140,7 +138,7 @@ function renderBenchmark() {
   document.querySelector("#scale-state").textContent = text(`bench.scale.${benchmarkScale}`);
   const max = Math.max(...results.map((result) => result.median_ms));
   const chart = document.querySelector("#benchmark-chart");
-  chart.replaceChildren(...results.map((result) => {
+  chart.replaceChildren(...results.map((result, index) => {
     const row = document.createElement("div");
     row.className = `bar-row ${result.candidate === "skein" ? "is-skein" : ""}`;
     const ratio = benchmarkScale === "linear"
@@ -154,6 +152,7 @@ function renderBenchmark() {
     const fill = document.createElement("div");
     fill.className = "bar-fill";
     fill.style.setProperty("--scale", Math.max(0.01, ratio).toFixed(5));
+    fill.style.setProperty("--stagger", `${index * 70}ms`);
     track.append(fill);
     const value = document.createElement("strong");
     value.className = "bar-value";
@@ -168,12 +167,6 @@ function renderBenchmark() {
     if (result.candidate === "skein") row.className = "is-skein";
     const candidate = document.createElement("td");
     candidate.textContent = candidateName(result.candidate);
-    if (result.candidate === "go-goroutines") {
-      const note = document.createElement("span");
-      note.className = "candidate-note";
-      note.textContent = text("bench.goControl");
-      candidate.append(note);
-    }
     const values = [formatMs(result.median_ms), formatMs(result.p95_ms), formatNumber(result.median_tasks_per_second, 0), String(result.runs)];
     row.append(candidate, ...values.map((value) => {
       const cell = document.createElement("td");

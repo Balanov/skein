@@ -18,7 +18,7 @@ jobs:
           go-version: "1.26.x"
           cache: false
       - name: Check formatting
-        run: test -z "$(gofmt -l cmd internal)"
+        run: test -z "$(gofmt -l .)"
       - name: Test
         run: go test -count=1 ./...
       - name: Vet
@@ -66,8 +66,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+        include:
+          - { runner: ubuntu-latest }
+          - { runner: ubuntu-24.04-arm }
+          - { runner: windows-latest }
+          - { runner: windows-11-arm }
+          - { runner: macos-15-intel }
+          - { runner: macos-latest }
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -86,13 +92,13 @@ jobs:
           echo "SKEIN_BIN=$output" >> "$GITHUB_ENV"
       - name: Functional CLI proof
         shell: bash
-        run: python bench/functional_proof.py --skein "$SKEIN_BIN" --output bench/results/ci-functional-${{ runner.os }}.json
+        run: python bench/functional_proof.py --skein "$SKEIN_BIN" --output "bench/results/ci-functional-${{ matrix.runner }}.json"
       - name: Parent/child stop proof
         shell: bash
-        run: python bench/stop_proof.py --skein "$SKEIN_BIN" --runs 3 --warmups 1 --tasks 4 --output bench/results/ci-stop-${{ runner.os }}.json
+        run: python bench/stop_proof.py --skein "$SKEIN_BIN" --runs 3 --warmups 1 --tasks 4 --output "bench/results/ci-stop-${{ matrix.runner }}.json"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: runtime-proof-${{ runner.os }}
+          name: runtime-proof-${{ matrix.runner }}
           path: bench/results/ci-*.json
           if-no-files-found: error
