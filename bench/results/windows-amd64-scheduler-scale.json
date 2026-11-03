@@ -1,0 +1,331 @@
+{
+  "schema": 1,
+  "measured_at": "2026-11-02T23:26:39.773335+00:00",
+  "scope": "Independent no-op tasks; scheduler/control-plane only. No models, providers, network calls, or workload processes. Candidate process startup and LangGraph compilation are outside measured samples; Skein validates its in-memory manifest on every sample.",
+  "warning": "Local observations, not universal rankings or agent-quality benchmarks. Python tracemalloc and Go allocation metrics are not directly comparable and must not be used as a cross-runtime memory ranking.",
+  "machine": {
+    "platform": "Windows-11-10.0.28020-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD",
+    "logical_cpus": 32,
+    "python": "3.12.16"
+  },
+  "results": [
+    {
+      "tasks": 10000,
+      "command": [
+        "./bin/skein-bench.exe",
+        "--tasks",
+        "10000",
+        "--runs",
+        "7",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "skein",
+        "tasks": 10000,
+        "workers": 32,
+        "go_version": "go1.27.3",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 12631000,
+            "tasks_per_second": 791702.9530520149,
+            "allocated_bytes": 13936584,
+            "allocation_count": 70395,
+            "succeeded": 10000
+          },
+          {
+            "run": 2,
+            "duration_ns": 12179700,
+            "tasks_per_second": 821038.2850152303,
+            "allocated_bytes": 13936440,
+            "allocation_count": 70393,
+            "succeeded": 10000
+          },
+          {
+            "run": 3,
+            "duration_ns": 9392700,
+            "tasks_per_second": 1064656.5950152779,
+            "allocated_bytes": 13897976,
+            "allocation_count": 70315,
+            "succeeded": 10000
+          },
+          {
+            "run": 4,
+            "duration_ns": 15404900,
+            "tasks_per_second": 649144.1034995359,
+            "allocated_bytes": 13920064,
+            "allocation_count": 70381,
+            "succeeded": 10000
+          },
+          {
+            "run": 5,
+            "duration_ns": 6985000,
+            "tasks_per_second": 1431639.2269148175,
+            "allocated_bytes": 13901416,
+            "allocation_count": 70326,
+            "succeeded": 10000
+          },
+          {
+            "run": 6,
+            "duration_ns": 13585700,
+            "tasks_per_second": 736068.0715752593,
+            "allocated_bytes": 13981080,
+            "allocation_count": 70474,
+            "succeeded": 10000
+          },
+          {
+            "run": 7,
+            "duration_ns": 12059900,
+            "tasks_per_second": 829194.2719259695,
+            "allocated_bytes": 13903024,
+            "allocation_count": 70323,
+            "succeeded": 10000
+          }
+        ]
+      },
+      "summary": {
+        "runs": 7,
+        "min_ms": 6.985,
+        "median_ms": 12.1797,
+        "p95_ms": 15.4049,
+        "max_ms": 15.4049,
+        "median_tasks_per_second": 821038.2850152303
+      }
+    },
+    {
+      "tasks": 10000,
+      "command": [
+        "C:\\Users\\Admin\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe",
+        "F:\\Паритет агенты\\skein\\bench\\python_candidate.py",
+        "--candidate",
+        "asyncio",
+        "--tasks",
+        "10000",
+        "--runs",
+        "7",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "asyncio",
+        "candidate_version": "3.12.16",
+        "tasks": 10000,
+        "python": "3.12.16",
+        "implementation": "CPython",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 138920500,
+            "tasks_per_second": 71983.61652887803,
+            "tracemalloc_peak_bytes": 8093420
+          },
+          {
+            "run": 2,
+            "duration_ns": 135364400,
+            "tasks_per_second": 73874.66719462429,
+            "tracemalloc_peak_bytes": 8093404
+          },
+          {
+            "run": 3,
+            "duration_ns": 142757100,
+            "tasks_per_second": 70049.05535346403,
+            "tracemalloc_peak_bytes": 8093292
+          },
+          {
+            "run": 4,
+            "duration_ns": 132592100,
+            "tasks_per_second": 75419.27460233303,
+            "tracemalloc_peak_bytes": 8093140
+          },
+          {
+            "run": 5,
+            "duration_ns": 131562300,
+            "tasks_per_second": 76009.61673670953,
+            "tracemalloc_peak_bytes": 8093028
+          },
+          {
+            "run": 6,
+            "duration_ns": 132075000,
+            "tasks_per_second": 75714.55612341473,
+            "tracemalloc_peak_bytes": 8093012
+          },
+          {
+            "run": 7,
+            "duration_ns": 135725000,
+            "tasks_per_second": 73678.39381101492,
+            "tracemalloc_peak_bytes": 8092996
+          }
+        ]
+      },
+      "summary": {
+        "runs": 7,
+        "min_ms": 131.5623,
+        "median_ms": 135.3644,
+        "p95_ms": 142.7571,
+        "max_ms": 142.7571,
+        "median_tasks_per_second": 73874.66719462429
+      }
+    },
+    {
+      "tasks": 100000,
+      "command": [
+        "./bin/skein-bench.exe",
+        "--tasks",
+        "100000",
+        "--runs",
+        "7",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "skein",
+        "tasks": 100000,
+        "workers": 32,
+        "go_version": "go1.27.3",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 116480600,
+            "tasks_per_second": 858512.0612359482,
+            "allocated_bytes": 128038632,
+            "allocation_count": 702066,
+            "succeeded": 100000
+          },
+          {
+            "run": 2,
+            "duration_ns": 116856700,
+            "tasks_per_second": 855748.9643298159,
+            "allocated_bytes": 127920832,
+            "allocation_count": 701847,
+            "succeeded": 100000
+          },
+          {
+            "run": 3,
+            "duration_ns": 119608400,
+            "tasks_per_second": 836061.6812865986,
+            "allocated_bytes": 127857040,
+            "allocation_count": 701710,
+            "succeeded": 100000
+          },
+          {
+            "run": 4,
+            "duration_ns": 115880200,
+            "tasks_per_second": 862960.1950980409,
+            "allocated_bytes": 127857568,
+            "allocation_count": 701720,
+            "succeeded": 100000
+          },
+          {
+            "run": 5,
+            "duration_ns": 116675800,
+            "tasks_per_second": 857075.7603547608,
+            "allocated_bytes": 127937856,
+            "allocation_count": 701884,
+            "succeeded": 100000
+          },
+          {
+            "run": 6,
+            "duration_ns": 113750200,
+            "tasks_per_second": 879119.3334165567,
+            "allocated_bytes": 127857176,
+            "allocation_count": 701714,
+            "succeeded": 100000
+          },
+          {
+            "run": 7,
+            "duration_ns": 129568500,
+            "tasks_per_second": 771792.5267329636,
+            "allocated_bytes": 127855800,
+            "allocation_count": 701698,
+            "succeeded": 100000
+          }
+        ]
+      },
+      "summary": {
+        "runs": 7,
+        "min_ms": 113.7502,
+        "median_ms": 116.6758,
+        "p95_ms": 129.5685,
+        "max_ms": 129.5685,
+        "median_tasks_per_second": 857075.7603547608
+      }
+    },
+    {
+      "tasks": 100000,
+      "command": [
+        "C:\\Users\\Admin\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe",
+        "F:\\Паритет агенты\\skein\\bench\\python_candidate.py",
+        "--candidate",
+        "asyncio",
+        "--tasks",
+        "100000",
+        "--runs",
+        "7",
+        "--warmups",
+        "2"
+      ],
+      "raw": {
+        "candidate": "asyncio",
+        "candidate_version": "3.12.16",
+        "tasks": 100000,
+        "python": "3.12.16",
+        "implementation": "CPython",
+        "samples": [
+          {
+            "run": 1,
+            "duration_ns": 1570801600,
+            "tasks_per_second": 63661.76352252251,
+            "tracemalloc_peak_bytes": 83276708
+          },
+          {
+            "run": 2,
+            "duration_ns": 1596073400,
+            "tasks_per_second": 62653.76015915057,
+            "tracemalloc_peak_bytes": 83276612
+          },
+          {
+            "run": 3,
+            "duration_ns": 1531811000,
+            "tasks_per_second": 65282.20518066524,
+            "tracemalloc_peak_bytes": 83259964
+          },
+          {
+            "run": 4,
+            "duration_ns": 1578469800,
+            "tasks_per_second": 63352.49492894955,
+            "tracemalloc_peak_bytes": 83276572
+          },
+          {
+            "run": 5,
+            "duration_ns": 1553173400,
+            "tasks_per_second": 64384.31150057038,
+            "tracemalloc_peak_bytes": 83259780
+          },
+          {
+            "run": 6,
+            "duration_ns": 1586512000,
+            "tasks_per_second": 63031.3543168914,
+            "tracemalloc_peak_bytes": 83276220
+          },
+          {
+            "run": 7,
+            "duration_ns": 1525801000,
+            "tasks_per_second": 65539.34621880573,
+            "tracemalloc_peak_bytes": 83259668
+          }
+        ]
+      },
+      "summary": {
+        "runs": 7,
+        "min_ms": 1525.801,
+        "median_ms": 1570.8016,
+        "p95_ms": 1596.0734,
+        "max_ms": 1596.0734,
+        "median_tasks_per_second": 63661.76352252251
+      }
+    }
+  ]
+}

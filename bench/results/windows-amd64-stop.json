@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "measured_at": "2026-11-02T23:27:08.695012+00:00",
+  "scope": "Wall time from starting the stop CLI until the run process exits after terminating all tracked Python process trees. No model calls. Includes stop-process launch, file propagation, taskkill/process-group termination and report output.",
+  "machine": {
+    "platform": "Windows-11-10.0.28020-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 25 Model 33 Stepping 0, AuthenticAMD",
+    "logical_cpus": 32
+  },
+  "tasks_per_run": 8,
+  "samples": [
+    {
+      "run": 1,
+      "stop_to_all_exited_ns": 143781600,
+      "return_code": 4,
+      "stopped": 8
+    },
+    {
+      "run": 2,
+      "stop_to_all_exited_ns": 146291500,
+      "return_code": 4,
+      "stopped": 8
+    },
+    {
+      "run": 3,
+      "stop_to_all_exited_ns": 133132700,
+      "return_code": 4,
+      "stopped": 8
+    },
+    {
+      "run": 4,
+      "stop_to_all_exited_ns": 133876000,
+      "return_code": 4,
+      "stopped": 8
+    },
+    {
+      "run": 5,
+      "stop_to_all_exited_ns": 142168800,
+      "return_code": 4,
+      "stopped": 8
+    },
+    {
+      "run": 6,
+      "stop_to_all_exited_ns": 132699000,
+      "return_code": 4,
+      "stopped": 8
+    },
+    {
+      "run": 7,
+      "stop_to_all_exited_ns": 132560200,
+      "return_code": 4,
+      "stopped": 8
+    },
+    {
+      "run": 8,
+      "stop_to_all_exited_ns": 134493600,
+      "return_code": 4,
+      "stopped": 8
+    },
+    {
+      "run": 9,
+      "stop_to_all_exited_ns": 136970300,
+      "return_code": 4,
+      "stopped": 8
+    },
+    {
+      "run": 10,
+      "stop_to_all_exited_ns": 127320300,
+      "return_code": 4,
+      "stopped": 8
+    },
+    {
+      "run": 11,
+      "stop_to_all_exited_ns": 128491200,
+      "return_code": 4,
+      "stopped": 8
+    },
+    {
+      "run": 12,
+      "stop_to_all_exited_ns": 137170500,
+      "return_code": 4,
+      "stopped": 8
+    }
+  ],
+  "summary": {
+    "median_ms": 134.1848,
+    "p95_ms": 146.2915,
+    "max_ms": 146.2915
+  }
+}

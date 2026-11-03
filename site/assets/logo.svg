@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="none">
+  <title>Skein</title>
+  <path d="M69 22C61 13 39 12 28 20C13 31 24 43 42 47L55 50C73 54 80 68 67 78C55 87 32 84 23 74" stroke="#20211f" stroke-width="8" stroke-linecap="round"/>
+  <path d="M58 18C44 17 29 22 29 30C29 38 44 40 55 43C71 47 78 57 72 67" stroke="#20211f" stroke-width="3" stroke-linecap="round" opacity=".48"/>
+  <rect x="66" y="66" width="20" height="20" rx="3" fill="#e34b2f"/>
+</svg>

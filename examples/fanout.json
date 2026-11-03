@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "workers": 2,
+  "limits": {"max_tasks": 8, "max_passes": 3},
+  "blocks": {
+    "audit": {
+      "argv": ["python", "-c", "import sys; data=sys.stdin.read(); print(data.upper(), end='')"],
+      "passes": 1,
+      "timeout_ms": 5000
+    }
+  },
+  "tasks": [
+    {"id": "left", "block": "audit", "input": "left branch"},
+    {"id": "right", "block": "audit", "input": "right branch"},
+    {"id": "join", "block": "audit", "needs": ["left"], "stdin_from": "left"}
+  ]
+}

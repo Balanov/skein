@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: If you use Skein, please cite it as below.
+title: "Skein: Fail-Closed Swarm Orchestration"
+authors:
+  - family-names: Balanov
+version: 0.1.0
+date-released: 2026-11-03
+url: https://paritet.dev/skein
+repository-code: https://github.com/Balanov/skein
+license: MIT
+type: software
+abstract: >-
+  Skein is a local fail-closed swarm control plane with epoch-fenced work,
+  late-completion rejection, reusable multi-pass blocks, and tracked
+  process-tree termination.
+keywords:
+  - agent orchestration
+  - swarm execution
+  - fencing token
+  - emergency stop
+  - fail-closed
