@@ -21,6 +21,9 @@ let benchmarkShape = "independent";
 let benchmarkSize = 1000;
 let benchmarkScale = "log";
 const candidateOrder = ["skein", "asyncio", "langgraph"];
+const mechanismSteps = ["one", "two", "three"];
+let mechanismStep = 0;
+let stepDirection = 1;
 
 function text(key, replacements = {}) {
   let value = messages[language][key] ?? key;
@@ -40,6 +43,42 @@ function formatRatio(value) {
   return formatNumber(value, value >= 100 ? 1 : 2);
 }
 
+function renderMechanismStep(animate = false) {
+  const name = mechanismSteps[mechanismStep];
+  document.querySelectorAll("[data-step]").forEach((button, index) => {
+    const active = index === mechanismStep;
+    button.setAttribute("aria-selected", String(active));
+    button.tabIndex = active ? 0 : -1;
+  });
+  document.querySelectorAll("[data-point]").forEach((point, index) => {
+    point.classList.toggle("is-active", index === mechanismStep);
+    point.classList.toggle("is-complete", index < mechanismStep);
+  });
+  const panel = document.querySelector("#mechanism-step");
+  panel.setAttribute("aria-labelledby", `step-tab-${name}`);
+  const copy = document.querySelector("#step-copy");
+  copy.querySelector("h3").textContent = text(`mechanism.${name}`);
+  copy.querySelector("p").textContent = text(`mechanism.${name}Body`);
+  document.querySelector("#step-position").textContent = `0${mechanismStep + 1} / 03`;
+  document.querySelector("#step-prev").disabled = mechanismStep === 0;
+  document.querySelector("#step-next").disabled = mechanismStep === mechanismSteps.length - 1;
+  document.querySelector(".step-packet").style.transform = `translate(${38 + mechanismStep * 132}px, 44px)`;
+  if (animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    copy.animate([
+      { opacity: 0, transform: `translateX(${stepDirection * 12}px)` },
+      { opacity: 1, transform: "translateX(0)" },
+    ], { duration: 180, easing: "ease-out" });
+  }
+}
+
+function setMechanismStep(index, animate = true) {
+  const next = Math.max(0, Math.min(mechanismSteps.length - 1, index));
+  if (next === mechanismStep) return;
+  stepDirection = next > mechanismStep ? 1 : -1;
+  mechanismStep = next;
+  renderMechanismStep(animate);
+}
+
 function translate() {
   document.documentElement.lang = language;
   document.querySelectorAll("[data-i18n]").forEach((element) => {
@@ -55,6 +94,7 @@ function translate() {
     if (!button.dataset.copied) button.textContent = messages[language][button.dataset.copyLabel];
   });
   updateDemo();
+  renderMechanismStep();
   renderBenchmark();
   renderStopEvidence();
   localStorage.setItem("skein-language", language);
@@ -247,6 +287,35 @@ document.querySelector("#scale-toggle").addEventListener("click", () => {
   renderBenchmark();
 });
 
+document.querySelectorAll("[data-step]").forEach((button, index) => {
+  button.addEventListener("click", () => setMechanismStep(index));
+  button.addEventListener("keydown", (event) => {
+    let next;
+    if (event.key === "ArrowRight") next = (mechanismStep + 1) % mechanismSteps.length;
+    if (event.key === "ArrowLeft") next = (mechanismStep + mechanismSteps.length - 1) % mechanismSteps.length;
+    if (event.key === "Home") next = 0;
+    if (event.key === "End") next = mechanismSteps.length - 1;
+    if (next === undefined) return;
+    event.preventDefault();
+    setMechanismStep(next);
+    document.querySelector(`[data-step="${mechanismSteps[next]}"]`).focus();
+  });
+});
+document.querySelector("#step-prev").addEventListener("click", () => setMechanismStep(mechanismStep - 1));
+document.querySelector("#step-next").addEventListener("click", () => setMechanismStep(mechanismStep + 1));
+let swipeStart = null;
+const stepPanel = document.querySelector("#mechanism-step");
+stepPanel.addEventListener("pointerdown", (event) => {
+  if (event.isPrimary) swipeStart = event.clientX;
+});
+stepPanel.addEventListener("pointerup", (event) => {
+  if (swipeStart === null) return;
+  const distance = event.clientX - swipeStart;
+  swipeStart = null;
+  if (Math.abs(distance) >= 44) setMechanismStep(mechanismStep + (distance < 0 ? 1 : -1));
+});
+stepPanel.addEventListener("pointercancel", () => { swipeStart = null; });
+
 document.querySelectorAll("[data-copy-target]").forEach((button) => button.addEventListener("click", () => {
   const target = document.querySelector(button.dataset.copyTarget);
   copyText(button, target.textContent.trim());
@@ -265,4 +334,17 @@ function renderStopEvidence() {
 const multiPass = evidence.functional.scenarios.find((scenario) => scenario.name === "multi_pass_data_flow");
 document.querySelector("#proof-events-code").textContent = multiPass.events.map((event) => JSON.stringify(event)).join("\n");
 
+async function loadGithubStats() {
+  try {
+    const response = await fetch("https://api.github.com/repos/Balanov/skein", { headers: { Accept: "application/vnd.github+json" } });
+    if (!response.ok) return;
+    const repository = await response.json();
+    document.querySelector("#gh-stars").textContent = formatNumber(repository.stargazers_count, 0);
+    document.querySelector("#gh-forks").textContent = formatNumber(repository.forks_count, 0);
+  } catch {
+    // Static counts remain visible when GitHub is unavailable.
+  }
+}
+
 translate();
+loadGithubStats();

@@ -15,7 +15,7 @@
       <a href="#benchmarks" data-i18n="nav.benchmarks">Measurements</a>
       <a href="#mechanism" data-i18n="nav.mechanism">Mechanism</a>
       <a href="#proof" data-i18n="nav.proof">Proof</a>
-      <a href="https://github.com/Balanov/skein" data-i18n="nav.code">Source</a>
+      <a class="github-link" href="https://github.com/Balanov/skein" aria-label="Skein on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12Z"/></svg><span>GitHub</span></a>
       <div class="language" aria-label="Language">
         <button type="button" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" data-lang="ru" aria-pressed="false">RU</button>
@@ -33,7 +33,13 @@
           <a class="button button-primary" href="#benchmarks" data-i18n="hero.primary">Inspect the measurements</a>
           <a class="button button-secondary" href="https://github.com/Balanov/skein/blob/main/bench/README.md" data-i18n="hero.secondary">Reproduce the proofs</a>
         </div>
-        <p class="hero-note" data-i18n="hero.note">One static binary · Go standard library · JSON manifests</p>
+        <div class="hero-meta">
+          <p class="hero-note" data-i18n="hero.note">One static binary · Go standard library · JSON manifests</p>
+          <div class="gh-stats" aria-label="GitHub repository statistics">
+            <a class="gh-stat" href="https://github.com/Balanov/skein/stargazers" aria-label="Star Skein on GitHub"><span><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>Star</span><strong id="gh-stars">259</strong></a>
+            <a class="gh-stat" href="https://github.com/Balanov/skein/forks" aria-label="Fork Skein on GitHub"><span><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/></svg>Fork</span><strong id="gh-forks">0</strong></a>
+          </div>
+        </div>
       </div>
 
       <div class="swarm-demo">
@@ -129,10 +135,20 @@
         <div><h2 data-i18n="mechanism.title">The stop is enforced where results are accepted.</h2><p class="section-body" data-i18n="mechanism.body">A stop command ends the processes, but the decisive check happens at acceptance: is this result still allowed to count. Skein checks the stop flag and the result's epoch before releasing dependents.</p></div>
       </div>
       <div class="mechanism-layout">
-        <div class="mechanism-steps">
-          <div><span class="step-token">01 / STOP</span><h3 data-i18n="mechanism.one">Persist the stop first.</h3><p data-i18n="mechanism.oneBody">The first stop wins. Repeated stops do not advance the epoch again.</p></div>
-          <div><span class="step-token">02 / FENCE</span><h3 data-i18n="mechanism.two">Reject stale work at acceptance.</h3><p data-i18n="mechanism.twoBody">A task can finish after the stop. Its old-epoch result still cannot release dependents.</p></div>
-          <div><span class="step-token">03 / EXIT</span><h3 data-i18n="mechanism.three">Terminate the tracked process tree.</h3><p data-i18n="mechanism.threeBody">Windows uses tree termination; Linux and macOS use process groups. Detached and remote work remain outside this guarantee.</p></div>
+        <div class="mechanism-carousel" id="mechanism-carousel">
+          <div class="mechanism-tabs" role="tablist" aria-label="Stop sequence">
+            <button id="step-tab-one" type="button" role="tab" data-step="one" aria-selected="true" aria-controls="mechanism-step" tabindex="0">01 / STOP</button>
+            <button id="step-tab-two" type="button" role="tab" data-step="two" aria-selected="false" aria-controls="mechanism-step" tabindex="-1">02 / FENCE</button>
+            <button id="step-tab-three" type="button" role="tab" data-step="three" aria-selected="false" aria-controls="mechanism-step" tabindex="-1">03 / EXIT</button>
+          </div>
+          <div class="mechanism-step" id="mechanism-step" role="tabpanel" aria-labelledby="step-tab-one" aria-live="polite">
+            <svg class="step-diagram" viewBox="0 0 360 96" aria-hidden="true"><path class="step-track" d="M28 48H332"/><circle class="step-point is-active" data-point="one" cx="48" cy="48" r="12"/><circle class="step-point" data-point="two" cx="180" cy="48" r="12"/><circle class="step-point" data-point="three" cx="312" cy="48" r="12"/><path class="step-fence" d="M180 24V72"/><path class="step-packet" d="M0 0h20v8H0z"/></svg>
+            <div class="step-copy" id="step-copy"><h3 data-i18n="mechanism.one">Persist the stop.</h3><p data-i18n="mechanism.oneBody">One latch. Repeats do not advance the epoch.</p></div>
+          </div>
+          <div class="mechanism-nav">
+            <span id="step-position">01 / 03</span>
+            <div><button id="step-prev" type="button" aria-label="Previous step" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 3 5.5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button><button id="step-next" type="button" aria-label="Next step"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m5.5 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
+          </div>
         </div>
         <div class="terminal code-terminal">
           <div class="terminal-top code-tabs">
