@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="docs/readme/hero-v2.png" alt="SKEIN — fail-closed orchestration for local agent swarms with a recorded stop proof and epoch fence" width="100%">
+  <img src="docs/readme/hero.png" alt="SKEIN — fail-closed orchestration for local agent swarms, with an epoch fence that rejects late results" width="100%">
   <p><strong>Fail-closed orchestration for local agent swarms.</strong></p>
   <p>Explicit task graphs · bounded concurrency · persistent epoch fence · MIT</p>
   <p>
