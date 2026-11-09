@@ -1,12 +1,34 @@
-# Skein
+<div align="center">
+  <img src="docs/readme/hero.png" alt="SKEIN — fail-closed orchestration for local agent swarms, with an epoch fence that rejects late results" width="100%">
+  <p><strong>Fail-closed orchestration for local agent swarms.</strong></p>
+  <p>Explicit task graphs · bounded concurrency · persistent epoch fence · MIT</p>
+  <p>
+    <a href="#install">Install</a> ·
+    <a href="#run">Run</a> ·
+    <a href="#what-the-stop-does--and-what-it-does-not">Stop boundary</a> ·
+    <a href="#measurements">Measurements</a> ·
+    <a href="BENCHMARKS.md">Benchmarks</a> ·
+    <a href="https://balanov.pro/skein/">Website</a> ·
+    <a href="README_RU.md">Русский</a>
+  </p>
+  <p>
+    <a href="https://github.com/Balanov/skein/actions/workflows/ci.yml"><img src="https://github.com/Balanov/skein/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+    <a href="https://github.com/Balanov/skein/releases/latest"><img src="https://img.shields.io/github/v/release/Balanov/skein" alt="Latest release"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT license"></a>
+    <a href="go.mod"><img src="https://img.shields.io/badge/Go-1.26%2B-00ADD8?logo=go&logoColor=white" alt="Go 1.26+"></a>
+  </p>
+</div>
 
-**Fail-closed orchestration for local agent swarms.**
+<div align="center">
+  <img src="docs/readme/demo.gif" alt="Recorded SKEIN stop proof: 160 of 160 real parent and child trees stopped, 160 of 160 heartbeats frozen, with median 141.663 ms" width="100%">
+  <p><sub>Recorded stop proof from <a href="bench/results/windows-amd64-stop.json">windows-amd64-stop.json</a> · 20 runs · <a href="bench/README.md">Reproduce the proof</a>.</sub></p>
+</div>
 
 Skein executes explicit task graphs with bounded concurrency and a persistent **epoch fence**. An emergency stop invalidates queued work and rejects late completions from the old epoch instead of merely labeling a task canceled.
 
 Independent open-source project by [Paritet](https://paritet.dev/). Skein is an execution control plane, not an agent framework or a model runtime. Version 0.2.0 is an early release: exercise the stop proof against your own workloads before relying on it operationally.
 
-[Architecture](docs/ARCHITECTURE.md) · [Security boundary](SECURITY.md) · [Integration](docs/INTEGRATION.md) · [Benchmarks](BENCHMARKS.md) · [Landing source](site/)
+[Architecture](docs/ARCHITECTURE.md) · [Security boundary](SECURITY.md) · [Integration](docs/INTEGRATION.md) · [Benchmarks](BENCHMARKS.md) · [Landing source](site/) · [Website](https://balanov.pro/skein/)
 
 ## Install
 
@@ -50,6 +72,11 @@ Manifests are JSON: argv arrays without an implicit shell, dependency graphs, re
 **Not covered:** sandboxing arbitrary commands; authentication or signed leases; semantic validation of agent output; exactly-once external side effects; automatic crash recovery; distributed consensus; remote or detached work, and side effects that already crossed an external boundary.
 
 A lease is a fencing token, not a credential — external systems honor it only through a gateway that checks it. Manifest commands keep the OS user's permissions; use an OS sandbox for untrusted workloads. See [SECURITY.md](SECURITY.md).
+
+<div align="center">
+  <img src="docs/readme/architecture.png" alt="SKEIN stop state transition: persistent latch, new epoch, tracked process-tree termination, and late-result rejection" width="100%">
+  <p><sub>The stop changes scheduling state; it does not create a sandbox, remote stop, or exactly-once external-effect guarantee. <a href="docs/ARCHITECTURE.md">Full architecture</a> · <a href="SECURITY.md">Security boundary</a>.</sub></p>
+</div>
 
 ## Measurements
 
