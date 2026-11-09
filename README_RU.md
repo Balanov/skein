@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="docs/readme/hero.png" alt="SKEIN — fail-closed оркестрация локальных agent swarms с epoch fence" width="100%">
+  <img src="docs/readme/hero-v2.png" alt="SKEIN — fail-closed оркестрация локальных agent swarms с записанным stop proof и epoch fence" width="100%">
   <p><strong>Fail-closed оркестрация локальных agent swarms.</strong></p>
   <p><a href="README.md">English</a> · <a href="#установка">Установка</a> · <a href="#запуск">Запуск</a> · <a href="#что-делает-stop">Граница stop</a> · <a href="#измерения">Измерения</a> · <a href="https://balanov.pro/skein/">Сайт</a></p>
 </div>
