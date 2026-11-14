@@ -8,7 +8,6 @@
     <a href="#what-the-stop-does--and-what-it-does-not">Stop boundary</a> ·
     <a href="#measurements">Measurements</a> ·
     <a href="BENCHMARKS.md">Benchmarks</a> ·
-    <a href="https://balanov.pro/skein/">Website</a> ·
     <a href="README_RU.md">Русский</a>
   </p>
   <p>
@@ -28,7 +27,7 @@ Skein executes explicit task graphs with bounded concurrency and a persistent **
 
 Independent open-source project by [Paritet](https://paritet.dev/). Skein is an execution control plane, not an agent framework or a model runtime. Version 0.2.0 is an early release: exercise the stop proof against your own workloads before relying on it operationally.
 
-[Architecture](docs/ARCHITECTURE.md) · [Security boundary](SECURITY.md) · [Integration](docs/INTEGRATION.md) · [Benchmarks](BENCHMARKS.md) · [Landing source](site/) · [Website](https://balanov.pro/skein/)
+[Architecture](docs/ARCHITECTURE.md) · [Security boundary](SECURITY.md) · [Integration](docs/INTEGRATION.md) · [Benchmarks](BENCHMARKS.md) · [Landing source](site/)
 
 ## Install
 
