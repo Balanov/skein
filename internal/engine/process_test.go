@@ -2,6 +2,7 @@ package engine
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -67,8 +68,9 @@ func TestEmergencyStopKillsProcessTree(t *testing.T) {
 	case <-time.After(8 * time.Second):
 		t.Fatal("run did not stop")
 	}
-	if err := <-errDone; err != nil {
-		t.Fatal(err)
+	err := <-errDone
+	if err == nil || !errors.Is(err, ErrStopped) {
+		t.Fatalf("fenced run err = %v, want ErrStopped", err)
 	}
 	before, err := os.ReadFile(heartbeat)
 	if err != nil {

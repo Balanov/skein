@@ -68,11 +68,11 @@ func runSwarm(args []string) int {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
 	report, err := engine.Run(ctx, manifest, engine.Options{StateDir: *state, Workers: *workers, Events: !*noEvents, SyncEvents: *syncEvents, IncludeTasks: *includeTasks})
-	if errors.Is(err, engine.ErrStopped) {
+	if errors.Is(err, engine.ErrStopped) && report.Status != engine.Stopped {
 		fmt.Fprintln(os.Stderr, "swarm is stopped; inspect it, then run skein reset before a new run")
 		return 4
 	}
-	if err != nil {
+	if err != nil && !errors.Is(err, engine.ErrStopped) {
 		return fail(err)
 	}
 	if !*includeTasks {

@@ -150,6 +150,9 @@ func Run(ctx context.Context, manifest Manifest, options Options) (Report, error
 	if err := writeReport(runDir, report, options.IncludeTasks); runErr == nil {
 		runErr = err
 	}
+	if runErr == nil && report.Status == Stopped {
+		runErr = ErrStopped
+	}
 	return report, runErr
 }
 

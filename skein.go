@@ -32,7 +32,9 @@ const (
 	Stopped   = engine.Stopped
 )
 
-// ErrStopped is returned when a run cannot start because the stop latch is set.
+// ErrStopped is returned when a run cannot start because the stop latch is
+// set, and when a stop fences a run in flight. In the fenced case the report
+// is returned alongside the error, with Status Stopped.
 var ErrStopped = engine.ErrStopped
 
 // Options controls a Run. StateDir is required for production use: it holds
