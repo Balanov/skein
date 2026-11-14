@@ -101,6 +101,14 @@ go test -race -count=1 ./... # requires CGO and a C compiler
 
 CI runs formatting, tests, vet, the Linux race detector, six cross-compile targets, the frontend build, and real functional plus parent/child stop proofs on six native runners (Linux, Windows, macOS × amd64, arm64). Tagged releases build each binary on its native platform and re-run both proofs per binary before publishing.
 
+## Related projects
+
+- [uncut](https://github.com/Balanov/uncut) — the lossless, headless coding-agent harness.
+- [shim](https://github.com/Balanov/shim) — a local-first harness for any model, MCP servers and Agent Skills.
+- [equal](https://github.com/Balanov/equal) — turns real API traffic into a local sandbox and an OpenAPI spec.
+- [until](https://github.com/Balanov/until) — evidence-gated autonomous product operations.
+
+
 ## License
 
 MIT © 2026 Balanov. Machine-readable citation: [CITATION.cff](CITATION.cff).
