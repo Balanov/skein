@@ -5,6 +5,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -32,14 +33,17 @@ func main() {
 		Workers:      2,
 		IncludeTasks: true,
 	})
-	if err != nil {
+	if err != nil && !errors.Is(err, skein.ErrStopped) {
 		log.Fatal(err)
 	}
 	fmt.Println("status:", report.Status)
 	for id, task := range report.Tasks {
 		fmt.Println("task:", id, task.Status, task.OutputPath)
 	}
-	if report.Status != skein.Succeeded {
+	switch {
+	case errors.Is(err, skein.ErrStopped):
+		os.Exit(4)
+	case report.Status != skein.Succeeded:
 		os.Exit(3)
 	}
 }

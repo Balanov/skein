@@ -162,8 +162,8 @@ func TestStopFencesQueuedWorkAndResetKeepsEpoch(t *testing.T) {
 		t.Fatal(err)
 	}
 	report := <-result
-	if err := <-errResult; err != nil {
-		t.Fatal(err)
+	if err := <-errResult; err == nil || !errors.Is(err, ErrStopped) {
+		t.Fatalf("fenced run err = %v, want ErrStopped", err)
 	}
 	if report.Status != Stopped || report.Succeeded != 0 || report.Tasks["queued"].Status != Stopped {
 		t.Fatalf("stop did not fence queue: %+v", report)
